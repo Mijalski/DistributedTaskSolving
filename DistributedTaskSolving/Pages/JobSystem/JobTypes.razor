@@ -1,0 +1,54 @@
+﻿@page "/jobTypes"
+@using DistributedTaskSolving.Application.IGenerics.Endpoints
+@using DistributedTaskSolving.Application.IGenerics.GridServices
+@using DistributedTaskSolving.Application.Shared.Business.JobSystem.JobTypes.Dto
+@using DistributedTaskSolving.Business.BusinessEntities.JobSystem.JobTypes
+@using Microsoft.Extensions.Primitives
+@inject IQueryGridService<JobType, Guid, JobTypeDto, string> QueryGridService
+@inject ICrudGridService<JobType, Guid, JobTypeDto, string> CrudService
+
+
+<h1>Job Types</h1>
+<p>Types of jobs that can be instantiated.</p>
+
+@if (_task.IsCompleted)
+{
+    <GridComponent T="JobTypeDto" Grid="@_grid"></GridComponent>
+}
+else
+{
+    <p><em>Loading...</em></p>
+}
+
+@code
+{
+    private CGrid<JobTypeDto> _grid;
+    private Task _task;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Action<IGridColumnCollection<JobTypeDto>> columns = c =>
+        {
+            c.Add(o => o.Id).SetPrimaryKey(true, false);
+            c.Add(o => o.Description);
+            c.Add(o => o.CreationDateTime).SetCrudHidden(true);
+            c.Add(o => o.CreatorUserName).SetCrudHidden(true);
+            c.Add(o => o.LastModificationDateTime).SetCrudHidden(true);
+            c.Add(o => o.LastModifierUserName).SetCrudHidden(true);
+        };
+
+        var query = new QueryDictionary<StringValues>();
+
+        var client = new GridClient<JobTypeDto>(q => QueryGridService.GetAll(q), query, false, "jobTypesGrid", columns)
+            .Sortable(true)
+            .SetStriped(true)
+            .ChangePageSize(true)
+            .Crud(true, CrudService)
+            .WithGridItemsCount();
+
+        _grid = client.Grid;
+
+        _task = client.UpdateGrid();
+        await _task;
+    }
+}
