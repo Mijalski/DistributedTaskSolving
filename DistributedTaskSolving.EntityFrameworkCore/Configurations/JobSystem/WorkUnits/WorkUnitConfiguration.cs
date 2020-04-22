@@ -12,7 +12,6 @@ namespace DistributedTaskSolving.EntityFrameworkCore.Configurations.JobSystem.Wo
             builder.ToTable("App.JobSystem.WorkUnits");
             builder.HasIndex(_ => _.Id);
             builder.Property(_ => _.Id).ValueGeneratedOnAdd();
-            builder.Ignore(_ => _.Name);
             builder.HasOne(_ => _.JobInstance).WithMany(_ => _.WorkUnits).HasForeignKey(_ => _.JobInstanceId);
         }
     }

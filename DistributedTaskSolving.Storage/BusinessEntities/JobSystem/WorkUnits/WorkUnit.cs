@@ -5,7 +5,7 @@ using DistributedTaskSolving.Business.IGenerics;
 
 namespace DistributedTaskSolving.Business.BusinessEntities.JobSystem.WorkUnits
 {
-    public class WorkUnit : CreationAuditedEntity, ISoftDelete, IHaveUniqueName<long>
+    public class WorkUnit : CreationAuditedEntity, ISoftDelete
     {
         public long JobInstanceId { get; set; }
         public JobInstance JobInstance { get; set; }
@@ -13,6 +13,5 @@ namespace DistributedTaskSolving.Business.BusinessEntities.JobSystem.WorkUnits
         public string DataOut { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime? DeletionDateTime { get; set; }
-        public long Name { get; set; }
     }
 }

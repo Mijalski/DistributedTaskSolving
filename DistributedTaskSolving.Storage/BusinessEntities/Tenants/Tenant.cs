@@ -6,7 +6,7 @@ using DistributedTaskSolving.Business.IGenerics;
 
 namespace DistributedTaskSolving.Business.BusinessEntities.Tenants
 {
-    public class Tenant : FullAuditedEntity<int>, ISoftDelete, IHaveUniqueName<string>
+    public class Tenant : FullAuditedEntity<int>, ISoftDelete
     {
         public Tenant()
         {

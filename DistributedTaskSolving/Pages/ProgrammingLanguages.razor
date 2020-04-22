@@ -1,10 +1,12 @@
 ﻿@page "/programmingLanguages"
+@using DistributedTaskSolving.Application.Business.ProgrammingLanguages.CommandHandlers
+@using DistributedTaskSolving.Application.Business.ProgrammingLanguages.QueryHandlers
 @using DistributedTaskSolving.Application.IGenerics.GridServices
 @using DistributedTaskSolving.Application.Shared.Business.ProgrammingLanguages
 @using DistributedTaskSolving.Business.BusinessEntities.ProgrammingLanguages
 @using Microsoft.Extensions.Primitives
-@inject IQueryGridService<ProgrammingLanguage, int, ProgrammingLanguageDto, string> QueryGridService
-@inject ICrudGridService<ProgrammingLanguage, int, ProgrammingLanguageDto, string> CrudService
+@inject IQueryGridService<ProgrammingLanguage, int, ProgrammingLanguageDto> QueryGridService
+@inject ICrudGridService<ProgrammingLanguageDto, int, ProgrammingLanguageQuery, UpdateProgrammingLanguageCommand, CreateProgrammingLanguageCommand, DeleteProgrammingLanguageCommand> CrudService
 
 
 <h1>Programming Languages</h1>
@@ -27,7 +29,8 @@ else
     {
         Action<IGridColumnCollection<ProgrammingLanguageDto>> columns = c =>
         {
-            c.Add(o => o.Id).SetPrimaryKey(true, false);
+            c.Add(o => o.Id).SetPrimaryKey(true).SetCrudHidden(true);
+            c.Add(o => o.Name);
             c.Add(o => o.CreationDateTime).SetCrudHidden(true);
             c.Add(o => o.CreatorUserName).SetCrudHidden(true);
             c.Add(o => o.LastModificationDateTime).SetCrudHidden(true);

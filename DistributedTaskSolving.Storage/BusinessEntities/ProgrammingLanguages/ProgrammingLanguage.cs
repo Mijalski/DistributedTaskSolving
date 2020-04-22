@@ -4,7 +4,7 @@ using DistributedTaskSolving.Business.IGenerics;
 
 namespace DistributedTaskSolving.Business.BusinessEntities.ProgrammingLanguages
 {
-    public class ProgrammingLanguage : CreationAuditedEntity<int>, ISoftDelete, IHaveUniqueName<string>
+    public class ProgrammingLanguage : CreationAuditedEntity<int>, ISoftDelete
     {
         public bool IsDeleted { get; set; }
         public DateTime? DeletionDateTime { get; set; }

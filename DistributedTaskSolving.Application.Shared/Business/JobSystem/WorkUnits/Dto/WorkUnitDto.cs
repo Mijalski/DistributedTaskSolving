@@ -1,5 +1,6 @@
 ﻿using DistributedTaskSolving.Application.Shared.Generics;
 using DistributedTaskSolving.Application.Shared.Generics.Dto;
+using MediatR;
 
 namespace DistributedTaskSolving.Application.Shared.Business.JobSystem.WorkUnits.Dto
 {

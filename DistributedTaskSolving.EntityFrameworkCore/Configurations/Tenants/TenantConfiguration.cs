@@ -12,7 +12,6 @@ namespace DistributedTaskSolving.EntityFrameworkCore.Configurations.Tenants
             builder.ToTable("App.Tenants");
             builder.HasIndex(_ => _.Id);
             builder.Property(_ => _.Id).ValueGeneratedOnAdd();
-            builder.HasIndex(_ => _.Name).IsUnique();
         }
     }
 }

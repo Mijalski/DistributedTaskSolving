@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AutoMapper;
+using DistributedTaskSolving.Application.Business.JobSystem.JobInstances.CommandHandlers;
+using DistributedTaskSolving.Application.Business.JobSystem.JobInstances.QueryHandlers;
 using DistributedTaskSolving.Application.Generics.Endpoints;
 using DistributedTaskSolving.Application.Shared.Business.JobSystem.JobInstances.Dto;
-using DistributedTaskSolving.Application.Shared.IGenerics.Cqrs.CommandServices;
-using DistributedTaskSolving.Application.Shared.IGenerics.Cqrs.QueryServices;
-using DistributedTaskSolving.Business.BusinessEntities.JobSystem.JobInstances;
+using MediatR;
 
 namespace DistributedTaskSolving.Application.Business.JobSystem.JobInstances
 {
-    public class JobInstanceEndpoint : QueryEndpoint<JobInstance, long, JobInstanceDto, long>
+    public class JobInstanceEndpoint : CrudEndpoint<JobInstanceDto, long, JobInstanceQuery, UpdateJobInstanceCommand, CreateJobInstanceCommand, DeleteJobInstanceCommand>
     {
-        public JobInstanceEndpoint(
-            IQueryService<JobInstance, long, JobInstanceDto, long> queryService)
-            : base(queryService)
+        public JobInstanceEndpoint(IMediator mediator, IMapper mapper) : base(mediator, mapper)
         {
         }
     }

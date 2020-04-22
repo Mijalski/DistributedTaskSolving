@@ -6,7 +6,7 @@ using DistributedTaskSolving.Business.IGenerics;
 
 namespace DistributedTaskSolving.Business.BusinessEntities.JobSystem.Algorithms
 {
-    public class Algorithm : FullAuditedEntity, ISoftDelete, IHaveUniqueName<string>
+    public class Algorithm : FullAuditedEntity, ISoftDelete
     {
         public byte[] Code { get; set; }
         public bool IsDeleted { get; set; }

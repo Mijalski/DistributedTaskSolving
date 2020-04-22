@@ -1,13 +1,15 @@
 ﻿@page "/jobInstances"
+@using DistributedTaskSolving.Application.Business.JobSystem.JobInstances.CommandHandlers
+@using DistributedTaskSolving.Application.Business.JobSystem.JobInstances.QueryHandlers
 @using DistributedTaskSolving.Application.IGenerics.GridServices
 @using DistributedTaskSolving.Application.Shared.Business.JobSystem.Algorithms
 @using DistributedTaskSolving.Application.Shared.Business.JobSystem.JobInstances.Dto
 @using DistributedTaskSolving.Business.BusinessEntities.JobSystem.Algorithms
 @using DistributedTaskSolving.Business.BusinessEntities.JobSystem.JobInstances
 @using Microsoft.Extensions.Primitives
-@inject IQueryGridService<Algorithm, long, AlgorithmDto, string> AlgorithmQueryGridService
-@inject IQueryGridService<JobInstance, long, JobInstanceDto, long> QueryGridService
-@inject ICrudGridService<JobInstance, long, JobInstanceDto, long> CrudService
+@inject IQueryGridService<Algorithm, long, AlgorithmDto> AlgorithmQueryGridService
+@inject IQueryGridService<JobInstance, long, JobInstanceDto> QueryGridService
+@inject ICrudGridService<JobInstanceDto, long, JobInstanceQuery, UpdateJobInstanceCommand, CreateJobInstanceCommand, DeleteJobInstanceCommand> CrudService
 
 
 <h1>Job Instances</h1>
@@ -21,7 +23,6 @@ else
 {
     <p><em>Loading...</em></p>
 }
-
 @code
 {
     private CGrid<JobInstanceDto> _grid;
@@ -31,7 +32,7 @@ else
     {
         Action<IGridColumnCollection<JobInstanceDto>> columns = c =>
         {
-            c.Add(o => o.Id).SetPrimaryKey(true);
+            c.Add(o => o.Id).SetPrimaryKey(true).SetCrudHidden(true);
             c.Add(o => o.JobTypeName).Titled("Job Type").SetCrudHidden(true);
             c.Add(o => o.AlgorithmName).Titled("Algorithm")
                 .SetSelectField(true, o => o.AlgorithmName, AlgorithmQueryGridService.GetAllSelectItemList);

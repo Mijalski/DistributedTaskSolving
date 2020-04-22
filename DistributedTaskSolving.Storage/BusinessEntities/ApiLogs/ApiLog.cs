@@ -4,7 +4,7 @@ using DistributedTaskSolving.Business.IGenerics;
 
 namespace DistributedTaskSolving.Business.BusinessEntities.ApiLogs
 {
-    public class ApiLog : CreationAuditedEntity, ISoftDelete, IHaveUniqueName<long>
+    public class ApiLog : CreationAuditedEntity, ISoftDelete
     {
         public DateTime RequestTime { get; set; }
         public long ResponseMillis { get; set; }
@@ -17,6 +17,5 @@ namespace DistributedTaskSolving.Business.BusinessEntities.ApiLogs
         public string IpAddress { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime? DeletionDateTime { get; set; }
-        public long Name { get; set; }
     }
 }

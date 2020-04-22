@@ -1,11 +1,14 @@
 ﻿@page "/jobTypes"
-@using DistributedTaskSolving.Application.IGenerics.Endpoints
+@using DistributedTaskSolving.Application.Business.JobSystem.JobTypes.CommandHandlers
+@using DistributedTaskSolving.Application.Business.JobSystem.JobTypes.QueryHandlers
 @using DistributedTaskSolving.Application.IGenerics.GridServices
 @using DistributedTaskSolving.Application.Shared.Business.JobSystem.JobTypes.Dto
 @using DistributedTaskSolving.Business.BusinessEntities.JobSystem.JobTypes
+@using MediatR
 @using Microsoft.Extensions.Primitives
-@inject IQueryGridService<JobType, Guid, JobTypeDto, string> QueryGridService
-@inject ICrudGridService<JobType, Guid, JobTypeDto, string> CrudService
+@inject IQueryGridService<JobType, Guid, JobTypeDto> QueryGridService
+@inject ICrudGridService<JobTypeDto, Guid, JobTypeQuery, UpdateJobTypeCommand, CreateJobTypeCommand, DeleteJobTypeCommand> CrudService
+@inject IMediator Mediator;
 
 
 <h1>Job Types</h1>
@@ -29,7 +32,8 @@ else
     {
         Action<IGridColumnCollection<JobTypeDto>> columns = c =>
         {
-            c.Add(o => o.Id).SetPrimaryKey(true, false);
+            c.Add(o => o.Id).SetPrimaryKey(true).SetCrudHidden(true);
+            c.Add(o => o.Name);
             c.Add(o => o.Description);
             c.Add(o => o.CreationDateTime).SetCrudHidden(true);
             c.Add(o => o.CreatorUserName).SetCrudHidden(true);

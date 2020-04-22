@@ -46,7 +46,7 @@ namespace DistributedTaskSolving.EntityFrameworkCore.DbContexts
             modelBuilder.Entity<JobType>().HasData(
                 new JobType
                 {
-                    Name = JobTypesEnums.PasswordBruteForcing,
+                    Name = "Password Brute Forcing",
                     Id = Guid.NewGuid(),
                     Description = "Given a hash of a password, guess the password"
                 }

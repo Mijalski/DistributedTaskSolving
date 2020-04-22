@@ -10,7 +10,6 @@ namespace DistributedTaskSolving.EntityFrameworkCore.Configurations.ApiLogs
         {
             builder.ToTable("App.ApiLogs");
             builder.HasIndex(_ => _.Id);
-            builder.HasIndex(_ => _.Name).IsUnique();
             builder.Property(_ => _.Id).ValueGeneratedOnAdd();
             builder.Property(e => e.IpAddress).HasMaxLength(45);
             builder.Property(e => e.Method).HasMaxLength(256);

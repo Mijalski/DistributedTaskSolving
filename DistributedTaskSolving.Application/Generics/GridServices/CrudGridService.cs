@@ -1,52 +1,51 @@
 ﻿using System.Threading.Tasks;
+using AutoMapper;
+using DistributedTaskSolving.Application.Generics.Requests;
 using DistributedTaskSolving.Application.IGenerics.GridServices;
-using DistributedTaskSolving.Application.Shared.IGenerics.Cqrs.CommandServices;
-using DistributedTaskSolving.Application.Shared.IGenerics.Cqrs.QueryServices;
 using DistributedTaskSolving.Application.Shared.IGenerics.Dto;
-using GridShared;
+using MediatR;
 
 namespace DistributedTaskSolving.Application.Generics.GridServices
 {
-    public class CrudGridService<TEntity, TPrimaryKey, TEntityDto, TPrimaryKeyDto> : ICrudGridService<TEntity, TPrimaryKey, TEntityDto, TPrimaryKeyDto>
-        where TEntityDto : class, IEntityDto<TPrimaryKeyDto>
+    public class CrudGridService<TEntityDto, TPrimaryKeyDto, TGetRequest, TUpdateRequest, TCreateRequest, TDeleteRequest> 
+        : ICrudGridService<TEntityDto, TPrimaryKeyDto, TGetRequest, TUpdateRequest, TCreateRequest, TDeleteRequest>
+        where TEntityDto : IEntityDto<TPrimaryKeyDto>
+        where TGetRequest : IGetRequest<TPrimaryKeyDto>, IRequest<TEntityDto>, new()
+        where TDeleteRequest : IGetRequest<TPrimaryKeyDto>, IRequest, new()
     {
-        private readonly IQueryService<TEntity, TPrimaryKey, TEntityDto, TPrimaryKeyDto> _queryService;
-        private readonly IUpdateCommandService<TEntity, TPrimaryKey, TEntityDto, TPrimaryKeyDto> _updateCommandService;
-        private readonly ICreateCommandService<TEntity, TPrimaryKey, TEntityDto, TPrimaryKeyDto> _createCommandService;
-        private readonly IDeleteCommandService<TEntity, TPrimaryKey, TEntityDto, TPrimaryKeyDto> _deleteCommandService;
+        private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
-        public CrudGridService(IQueryService<TEntity, TPrimaryKey, TEntityDto, TPrimaryKeyDto> queryService, 
-            IUpdateCommandService<TEntity, TPrimaryKey, TEntityDto, TPrimaryKeyDto> updateCommandService,
-            ICreateCommandService<TEntity, TPrimaryKey, TEntityDto, TPrimaryKeyDto> createCommandService, 
-            IDeleteCommandService<TEntity, TPrimaryKey, TEntityDto, TPrimaryKeyDto> deleteCommandService
-            )
+        public CrudGridService(IMediator mediator, IMapper mapper)
         {
-            _queryService = queryService;
-            _updateCommandService = updateCommandService;
-            _createCommandService = createCommandService;
-            _deleteCommandService = deleteCommandService;
+            _mediator = mediator;
+            _mapper = mapper;
         }
 
         public async Task<TEntityDto> Get(params object[] keys)
         {
-            var id = (TPrimaryKeyDto) keys[0];
-            return await _queryService.Get(id);
+            var id = (TPrimaryKeyDto)keys[0];
+            var newRequest = new TGetRequest { Id = id };
+            return await _mediator.Send(newRequest);
         }
 
         public async Task Insert(TEntityDto item)
         {
-            await _createCommandService.Create(item);
+            var request = _mapper.Map<TCreateRequest>(item);
+            await _mediator.Send(request);
         }
 
         public async Task Update(TEntityDto item)
         {
-            await _updateCommandService.Update(item, item.Id);
+            var request = _mapper.Map<TUpdateRequest>(item);
+            await _mediator.Send(request);
         }
-
+        
         public async Task Delete(params object[] keys)
         {
             var id = (TPrimaryKeyDto)keys[0];
-            await _deleteCommandService.Delete(id);
+            var newRequest = new TDeleteRequest { Id = id };
+            await _mediator.Send(newRequest);
         }
     }
 }

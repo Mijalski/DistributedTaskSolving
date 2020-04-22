@@ -11,7 +11,6 @@ namespace DistributedTaskSolving.EntityFrameworkCore.Configurations.ProgrammingL
             builder.ToTable("App.ProgrammingLanguages");
             builder.HasIndex(_ => _.Id);
             builder.Property(_ => _.Id).ValueGeneratedOnAdd();
-            builder.HasIndex(_ => _.Name).IsUnique();
         }
     }
 }

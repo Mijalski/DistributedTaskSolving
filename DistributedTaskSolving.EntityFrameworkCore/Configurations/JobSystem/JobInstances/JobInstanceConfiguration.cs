@@ -11,7 +11,6 @@ namespace DistributedTaskSolving.EntityFrameworkCore.Configurations.JobSystem.Jo
             builder.ToTable("App.JobSystem.JobInstances");
             builder.Property(_ => _.Id).ValueGeneratedOnAdd();
             builder.HasIndex(_ => _.Id);
-            builder.Ignore(_ => _.Name);
             builder.HasOne(_ => _.Algorithm).WithMany().HasForeignKey(_ => _.AlgorithmId);
         }
     }

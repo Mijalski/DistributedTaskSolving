@@ -1,44 +1,47 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DistributedTaskSolving.Application.Generics.Dto.Requests;
-using DistributedTaskSolving.Application.Generics.Helpers;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using DistributedTaskSolving.Application.IGenerics.GridServices;
-using DistributedTaskSolving.Application.Shared.IGenerics.Cqrs.QueryServices;
 using DistributedTaskSolving.Application.Shared.IGenerics.Dto;
-using DistributedTaskSolving.Business.IGenerics;
 using DistributedTaskSolving.Business.IGenerics.Entities;
+using DistributedTaskSolving.EntityFrameworkCore.Repositories;
 using GridMvc.Server;
 using GridShared;
 using GridShared.Utility;
+using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
 
 namespace DistributedTaskSolving.Application.Generics.GridServices
 {
-    public class QueryGridService<TEntity, TPrimaryKey, TGetOutput, TPrimaryKeyDto> : IQueryGridService<TEntity, TPrimaryKey, TGetOutput, TPrimaryKeyDto>
-        where TEntity : class, IEntity<TPrimaryKey>, IHaveUniqueName<TPrimaryKeyDto>
-        where TGetOutput : class, IEntityDto<TPrimaryKeyDto>
+    public class QueryGridService<TEntity, TPrimaryKey, TEntityDto> : IQueryGridService<TEntity, TPrimaryKey, TEntityDto>
+        where TEntity : class, IEntity<TPrimaryKey>
     {
-        private readonly IQueryService<TEntity, TPrimaryKey, TGetOutput, TPrimaryKeyDto> _queryService;
-        public QueryGridService(IQueryService<TEntity, TPrimaryKey, TGetOutput, TPrimaryKeyDto> queryService)
+        private readonly IRepository<TEntity, TPrimaryKey> _repository;
+        private readonly IMapper _mapper;
+
+        public QueryGridService(IRepository<TEntity, TPrimaryKey> repository, 
+            IMapper mapper)
         {
-            _queryService = queryService;
+            _repository = repository;
+            _mapper = mapper;
         }
 
         public IEnumerable<SelectItem> GetAllSelectItemList()
         {
-           return _queryService.GetAll()
+           return _repository.GetAll()
                .Select(x => new SelectItem(x.Id.ToString(), x.Id.ToString()))
                .ToList();
         }
 
-        public virtual ItemsDTO<TGetOutput> GetAll(QueryDictionary<StringValues> queryDictionary)
+        public virtual ItemsDTO<TEntityDto> GetAll(QueryDictionary<StringValues> queryDictionary)
         {
-            var query = _queryService.GetAll();
+            var query = _repository.GetAll()
+                .ProjectTo<TEntityDto>(_mapper.ConfigurationProvider);
 
-            var server = new GridServer<TGetOutput>(query, new QueryCollection(queryDictionary),
+            var server = new GridServer<TEntityDto>(query, new QueryCollection(queryDictionary),
                 true, "grid", pageSize: 10);
 
             return server.ItemsToDisplay;

@@ -1,4 +1,7 @@
 ﻿@page "/algorithms"
+@using DistributedTaskSolving.Application.Business.JobSystem.Algorithms.CommandHandlers
+@using DistributedTaskSolving.Application.Business.JobSystem.Algorithms.QueryHandlers
+@using DistributedTaskSolving.Application.Generics.GridServices
 @using DistributedTaskSolving.Application.IGenerics.GridServices
 @using DistributedTaskSolving.Application.Shared.Business.JobSystem.Algorithms
 @using DistributedTaskSolving.Application.Shared.Business.JobSystem.JobTypes.Dto
@@ -7,10 +10,10 @@
 @using DistributedTaskSolving.Business.BusinessEntities.JobSystem.JobTypes
 @using DistributedTaskSolving.Business.BusinessEntities.ProgrammingLanguages
 @using Microsoft.Extensions.Primitives
-@inject IQueryGridService<ProgrammingLanguage, int, ProgrammingLanguageDto, string> ProgrammingLanguageQueryGridService
-@inject IQueryGridService<JobType, Guid, JobTypeDto, string> JobTypeQueryService
-@inject IQueryGridService<Algorithm, long, AlgorithmDto, string> QueryGridService
-@inject ICrudGridService<Algorithm, long, AlgorithmDto, string> CrudService
+@inject IQueryGridService<Algorithm, long, AlgorithmDto> QueryGridService
+@inject IQueryGridService<JobType, Guid, JobTypeDto> JobTypeQueryService
+@inject IQueryGridService<ProgrammingLanguage, int, ProgrammingLanguageDto> ProgrammingLanguageQueryGridService
+@inject ICrudGridService<AlgorithmDto, long, AlgorithmQuery, UpdateAlgorithmCommand, CreateAlgorithmCommand, DeleteAlgorithmCommand> CrudService
 
 
 <h1>Algorithms</h1>
@@ -34,10 +37,11 @@ else
     {
         Action<IGridColumnCollection<AlgorithmDto>> columns = c =>
         {
-            c.Add(o => o.Id).SetPrimaryKey(true, false);
-            c.Add(o => o.JobTypeName).Titled("Job Type")
+            c.Add(o => o.Id).SetPrimaryKey(true).SetCrudHidden(true);
+            c.Add(o => o.Name);
+            c.Add(o => o.JobTypeId).Titled("Job Type")
                 .SetSelectField(true, o => o.JobTypeName, JobTypeQueryService.GetAllSelectItemList);
-            c.Add(o => o.ProgrammingLanguageName).Titled("Programming Language")
+            c.Add(o => o.ProgrammingLanguageId).Titled("Programming Language")
                 .SetSelectField(true, o => o.ProgrammingLanguageName, ProgrammingLanguageQueryGridService.GetAllSelectItemList);
             c.Add(o => o.CreationDateTime).SetCrudHidden(true);
             c.Add(o => o.CreatorUserName).SetCrudHidden(true);
