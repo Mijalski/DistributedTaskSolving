@@ -28,27 +28,27 @@ namespace DistributedTaskSolving.Application.Generics.Endpoints
         }
 
         [HttpGet]
-        public async Task<TEntityDto> Get(TGetRequest request)
+        public virtual async Task<TEntityDto> Get(TGetRequest request)
         {
             return await _mediator.Send(request);
         }
 
         [HttpPost]
-        public async Task Insert(TEntityDto item)
+        public virtual async Task Insert(TEntityDto item)
         {
             var request = _mapper.Map<TCreateRequest>(item);
             await _mediator.Send(request);
         }
 
         [HttpPut]
-        public async Task Update(TEntityDto item)
+        public virtual async Task Update(TEntityDto item)
         {
             var request = _mapper.Map<TUpdateRequest>(item);
             await _mediator.Send(request);
         }
 
         [HttpDelete]
-        public async Task Delete(TDeleteRequest request)
+        public virtual async Task Delete(TDeleteRequest request)
         {
             await _mediator.Send(request);
         }

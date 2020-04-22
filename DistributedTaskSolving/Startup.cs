@@ -1,6 +1,7 @@
 using System.Reflection;
 using AutoMapper;
 using DistributedTaskSolving.Application;
+using DistributedTaskSolving.Application.Business.JobSystem.JobInstances.Hubs;
 using DistributedTaskSolving.Application.Generics.GridServices;
 using DistributedTaskSolving.Application.IGenerics.GridServices;
 using Microsoft.AspNetCore.Builder;
@@ -49,6 +50,8 @@ namespace DistributedTaskSolving
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddSignalR();
+
             services.AddMediatR(typeof(ApplicationModule).Assembly);
 
             services.AddAutoMapper(typeof(ApplicationModule).Assembly);
@@ -93,6 +96,10 @@ namespace DistributedTaskSolving
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<JobInstanceHub>("/jobInstancesHub");
+            });
 
             app.UseAuthentication();
             app.UseAuthorization();

@@ -21,5 +21,21 @@ namespace DistributedTaskSolving.Business.BusinessEntities.JobSystem.JobInstance
         public virtual ICollection<WorkUnit> WorkUnits { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime? DeletionDateTime { get; set; }
+
+        public WorkUnit CreateWorkUnit()
+        {
+            var workUnit = new WorkUnit
+            {
+                JobInstance = this, 
+                DataIn = "aaa-ccc"
+            };
+            
+            WorkUnits ??= new List<WorkUnit>();
+            WorkUnits.Add(workUnit);
+
+            //TODO Implement some kind of mutex system so that one batch of data is given to one work unit
+
+            return workUnit;
+        }
     }
 }
