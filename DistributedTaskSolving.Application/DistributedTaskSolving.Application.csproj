@@ -5,11 +5,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Business\JobSystem\WorkUnits\**" />
+    <EmbeddedResource Remove="Business\JobSystem\WorkUnits\**" />
+    <None Remove="Business\JobSystem\WorkUnits\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="FluentValidation" Version="8.6.2" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="8.6.2" />
     <PackageReference Include="GridMvcCore" Version="2.11.30" />
     <PackageReference Include="MediatR" Version="8.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.1.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.3.0" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.23" />
   </ItemGroup>
@@ -21,7 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Business\JobSystem\WorkUnits\" />
     <Folder Include="Business\Tenants\" />
   </ItemGroup>
 

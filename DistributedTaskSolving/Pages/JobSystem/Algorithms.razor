@@ -39,10 +39,12 @@ else
         {
             c.Add(o => o.Id).SetPrimaryKey(true).SetCrudHidden(true);
             c.Add(o => o.Name);
-            c.Add(o => o.JobTypeId).Titled("Job Type")
+            c.Add(o => o.JobTypeId, true).Titled("Job Type")
                 .SetSelectField(true, o => o.JobTypeName, JobTypeQueryService.GetAllSelectItemList);
-            c.Add(o => o.ProgrammingLanguageId).Titled("Programming Language")
+            c.Add(o => o.JobTypeName).SetReadOnlyOnUpdate(true);
+            c.Add(o => o.ProgrammingLanguageId, true).Titled("Programming Language")
                 .SetSelectField(true, o => o.ProgrammingLanguageName, ProgrammingLanguageQueryGridService.GetAllSelectItemList);
+            c.Add(o => o.ProgrammingLanguageName).SetReadOnlyOnUpdate(true);
             c.Add(o => o.CreationDateTime).SetCrudHidden(true);
             c.Add(o => o.CreatorUserName).SetCrudHidden(true);
             c.Add(o => o.LastModificationDateTime).SetCrudHidden(true);

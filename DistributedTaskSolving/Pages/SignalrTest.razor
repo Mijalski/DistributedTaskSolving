@@ -1,5 +1,25 @@
 ﻿@page "/signalrTest"
+@inject NavigationManager navigationManager
+@using DistributedTaskSolving.Application.Business.JobSystem.JobInstances.Hubs.Clients
 
 <h1>Page To Test SignalR</h1>
 
+<button @onclick="@Connect">Connect to hub</button>
+@if (_isNoWorkToBeDone)
+{
+    <div>
+        No active job instances to work on :O!
+    </div>
+}
 
+@code
+{
+    JobInstanceHubClient _hubClient = null;
+    bool _isNoWorkToBeDone = false;
+
+    async Task Connect()
+    {
+        _hubClient = new JobInstanceHubClient(navigationManager);
+        _hubClient.StartAsync();
+    }
+}

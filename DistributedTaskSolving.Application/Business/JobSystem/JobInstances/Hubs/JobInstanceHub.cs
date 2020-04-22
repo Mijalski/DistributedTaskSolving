@@ -7,6 +7,7 @@ using DistributedTaskSolving.Business.BusinessEntities.JobSystem.WorkUnits;
 using DistributedTaskSolving.EntityFrameworkCore.Repositories;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace DistributedTaskSolving.Application.Business.JobSystem.JobInstances.Hubs
 {
@@ -44,7 +45,7 @@ namespace DistributedTaskSolving.Application.Business.JobSystem.JobInstances.Hub
             }
 
             var workUnit = await CreateWorkUnit(oldestUnfinishedJobInstance);
-            await Clients.Client(Context.ConnectionId).SendCoreAsync("OnStartWork", new object[] { workUnit.DataIn });
+            await Clients.Client(Context.ConnectionId).SendAsync("ReceiveWorkUnit", workUnit.DataIn);
         }
 
         public async Task StartWorkOnJobInstance(long jobInstanceId)
@@ -60,11 +61,11 @@ namespace DistributedTaskSolving.Application.Business.JobSystem.JobInstances.Hub
 
             if (jobInstance.IsSolved)
             {
-                await Clients.Client(Context.ConnectionId).SendCoreAsync("OnWorkCompleted", new object[] {});
+                await Clients.Client(Context.ConnectionId).SendAsync("ReceiveWorkCompleted");
             }
 
             var workUnit = await CreateWorkUnit(jobInstance);
-            await Clients.Client(Context.ConnectionId).SendCoreAsync("OnStartWork", new object[] { workUnit.DataIn });
+            await Clients.Client(Context.ConnectionId).SendAsync("ReceiveWorkUnit", workUnit.DataIn);
         }
 
         public async Task StartWork()
@@ -73,10 +74,15 @@ namespace DistributedTaskSolving.Application.Business.JobSystem.JobInstances.Hub
                 .GetAll()
                 .Where(_ => !_.IsSolved)
                 .OrderByDescending(_ => _.CreationDateTime)
-                .FirstAsync();
+                .FirstOrDefaultAsync();
+
+            if (jobInstance == null)
+            {
+                await Clients.Client(Context.ConnectionId).SendAsync("ReceiveNoWorkToBeDone");
+            }
 
             var workUnit = await CreateWorkUnit(jobInstance);
-            await Clients.Client(Context.ConnectionId).SendCoreAsync("ReceiveWorkUnit", new object[] { workUnit.DataIn });
+            await Clients.Client(Context.ConnectionId).SendAsync("ReceiveWorkUnit", workUnit.DataIn);
         }
 
         private async Task<WorkUnit> CreateWorkUnit(JobInstance jobInstance)

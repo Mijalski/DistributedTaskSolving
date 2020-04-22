@@ -34,8 +34,9 @@ else
         {
             c.Add(o => o.Id).SetPrimaryKey(true).SetCrudHidden(true);
             c.Add(o => o.JobTypeName).Titled("Job Type").SetCrudHidden(true);
-            c.Add(o => o.AlgorithmName).Titled("Algorithm")
+            c.Add(o => o.AlgorithmId, true).Titled("Algorithm")
                 .SetSelectField(true, o => o.AlgorithmName, AlgorithmQueryGridService.GetAllSelectItemList);
+            c.Add(o => o.AlgorithmName).SetReadOnlyOnUpdate(true);
             c.Add(o => o.Key).SetReadOnlyOnUpdate(true);
             c.Add(o => o.IsSolved).SetCrudHidden(true);
             c.Add(o => o.Result).SetCrudHidden(true);

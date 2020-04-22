@@ -96,10 +96,6 @@ namespace DistributedTaskSolving
             app.UseStaticFiles();
 
             app.UseRouting();
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<JobInstanceHub>("/jobInstancesHub");
-            });
 
             app.UseAuthentication();
             app.UseAuthorization();
@@ -109,6 +105,7 @@ namespace DistributedTaskSolving
                 endpoints.MapControllers();
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
+                endpoints.MapHub<JobInstanceHub>("/jobInstancesHub");
             });
         }
     }
