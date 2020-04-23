@@ -1,0 +1,68 @@
+﻿@page "/algorithms"
+@using DistributedTaskSolving.Application.Business.JobSystem.Algorithms.CommandHandlers
+@using DistributedTaskSolving.Application.Business.JobSystem.Algorithms.QueryHandlers
+@using DistributedTaskSolving.Application.Generics.GridServices
+@using DistributedTaskSolving.Application.IGenerics.GridServices
+@using DistributedTaskSolving.Application.Shared.Business.JobSystem.Algorithms
+@using DistributedTaskSolving.Application.Shared.Business.JobSystem.JobTypes.Dto
+@using DistributedTaskSolving.Application.Shared.Business.ProgrammingLanguages
+@using DistributedTaskSolving.Business.BusinessEntities.JobSystem.Algorithms
+@using DistributedTaskSolving.Business.BusinessEntities.JobSystem.JobTypes
+@using DistributedTaskSolving.Business.BusinessEntities.ProgrammingLanguages
+@using Microsoft.Extensions.Primitives
+@inject IQueryGridService<Algorithm, long, AlgorithmDto> QueryGridService
+@inject IQueryGridService<JobType, Guid, JobTypeDto> JobTypeQueryService
+@inject IQueryGridService<ProgrammingLanguage, int, ProgrammingLanguageDto> ProgrammingLanguageQueryGridService
+@inject ICrudGridService<AlgorithmDto, long, AlgorithmQuery, UpdateAlgorithmCommand, CreateAlgorithmCommand, DeleteAlgorithmCommand> CrudService
+
+
+<h1>Algorithms</h1>
+<p>Implementations in various languages for job types</p>
+
+@if (_task.IsCompleted)
+{
+    <GridComponent T="AlgorithmDto" Grid="@_grid"></GridComponent>
+}
+else
+{
+    <p><em>Loading...</em></p>
+}
+
+@code
+{
+    private CGrid<AlgorithmDto> _grid;
+    private Task _task;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Action<IGridColumnCollection<AlgorithmDto>> columns = c =>
+        {
+            c.Add(o => o.Id).SetPrimaryKey(true).SetCrudHidden(true);
+            c.Add(o => o.Name);
+            c.Add(o => o.JobTypeId, true).Titled("Job Type")
+                .SetSelectField(true, o => o.JobTypeName, JobTypeQueryService.GetAllSelectItemList);
+            c.Add(o => o.JobTypeName).SetReadOnlyOnUpdate(true);
+            c.Add(o => o.ProgrammingLanguageId, true).Titled("Programming Language")
+                .SetSelectField(true, o => o.ProgrammingLanguageName, ProgrammingLanguageQueryGridService.GetAllSelectItemList);
+            c.Add(o => o.ProgrammingLanguageName).SetReadOnlyOnUpdate(true);
+            c.Add(o => o.CreationDateTime).SetCrudHidden(true);
+            c.Add(o => o.CreatorUserName).SetCrudHidden(true);
+            c.Add(o => o.LastModificationDateTime).SetCrudHidden(true);
+            c.Add(o => o.LastModifierUserName).SetCrudHidden(true);
+        };
+
+        var query = new QueryDictionary<StringValues>();
+
+        var client = new GridClient<AlgorithmDto>(q => QueryGridService.GetAll(q), query, false, "AlgorithmsGrid", columns)
+            .Sortable(true)
+            .SetStriped(true)
+            .ChangePageSize(true)
+            .Crud(true, CrudService)
+            .WithGridItemsCount();
+
+        _grid = client.Grid;
+
+        _task = client.UpdateGrid();
+        await _task;
+    }
+}

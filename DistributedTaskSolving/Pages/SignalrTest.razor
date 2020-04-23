@@ -1,0 +1,63 @@
+﻿@page "/signalrTest"
+@inject NavigationManager navigationManager
+@using DistributedTaskSolving.Application.Business.JobSystem.JobInstances.Hubs.Clients
+@using DistributedTaskSolving.Business.BusinessEntities.JobSystem.JobTypes
+
+<h1>Page To Test SignalR</h1>
+
+
+<button type="button" class="btn btn-primary"
+        @onclick="@(() => Connect(JobTypeEnums.PasswordBruteForcing))">
+    Connect to hub for job type: @JobTypeEnums.PasswordBruteForcing
+</button>
+
+<button type="button" class="btn btn-primary"
+        @onclick="@(() => Connect(JobTypeEnums.MonteCarlo))">
+    Connect to hub for job type: @JobTypeEnums.MonteCarlo
+</button>
+
+<button type="button" class="btn btn-primary"
+        @onclick="@(() => Connect(JobTypeEnums.WordGuessing))">
+    Connect to hub for job type: @JobTypeEnums.WordGuessing
+</button>
+
+<div class="my-2">
+    @if (!string.IsNullOrEmpty(LastMessageFromServer))
+    {
+        <div>
+            Server responded with: @LastMessageFromServer
+        </div>
+    }
+</div>
+
+<button type="button" class="btn btn-secondary" @onclick="Refresh">Refresh</button>
+
+@code
+{
+    private JobInstanceHubClientForTest _hubClient = null;
+    public static string LastMessageFromServer { get; set; }
+
+    async Task Connect(string jobTypeName)
+    {
+        _hubClient ??= new JobInstanceHubClientForTest(navigationManager);
+        await _hubClient.StartWorkAsync(jobTypeName);
+    }
+
+    public class JobInstanceHubClientForTest : JobInstanceHubClient
+    {
+
+        public JobInstanceHubClientForTest(NavigationManager navigationManager) : base(navigationManager)
+        {
+        }
+
+        public override void ReceiveMessage(string message)
+        {
+            LastMessageFromServer = message;
+        }
+    }
+
+    public void Refresh()
+    {
+        StateHasChanged();
+    }
+}

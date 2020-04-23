@@ -1,0 +1,54 @@
+﻿@page "/programmingLanguages"
+@using DistributedTaskSolving.Application.Business.ProgrammingLanguages.CommandHandlers
+@using DistributedTaskSolving.Application.Business.ProgrammingLanguages.QueryHandlers
+@using DistributedTaskSolving.Application.IGenerics.GridServices
+@using DistributedTaskSolving.Application.Shared.Business.ProgrammingLanguages
+@using DistributedTaskSolving.Business.BusinessEntities.ProgrammingLanguages
+@using Microsoft.Extensions.Primitives
+@inject IQueryGridService<ProgrammingLanguage, int, ProgrammingLanguageDto> QueryGridService
+@inject ICrudGridService<ProgrammingLanguageDto, int, ProgrammingLanguageQuery, UpdateProgrammingLanguageCommand, CreateProgrammingLanguageCommand, DeleteProgrammingLanguageCommand> CrudService
+
+
+<h1>Programming Languages</h1>
+
+@if (_task.IsCompleted)
+{
+    <GridComponent T="ProgrammingLanguageDto" Grid="@_grid"></GridComponent>
+}
+else
+{
+    <p><em>Loading...</em></p>
+}
+
+@code
+{
+    private CGrid<ProgrammingLanguageDto> _grid;
+    private Task _task;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Action<IGridColumnCollection<ProgrammingLanguageDto>> columns = c =>
+        {
+            c.Add(o => o.Id).SetPrimaryKey(true).SetCrudHidden(true);
+            c.Add(o => o.Name);
+            c.Add(o => o.CreationDateTime).SetCrudHidden(true);
+            c.Add(o => o.CreatorUserName).SetCrudHidden(true);
+            c.Add(o => o.LastModificationDateTime).SetCrudHidden(true);
+            c.Add(o => o.LastModifierUserName).SetCrudHidden(true);
+        };
+
+        var query = new QueryDictionary<StringValues>();
+
+        var client = new GridClient<ProgrammingLanguageDto>(q => QueryGridService.GetAll(q), query, false, "programmingLanguagesGrid", columns)
+            .Sortable(true)
+            .SetStriped(true)
+            .ChangePageSize(true)
+            .Crud(true, CrudService)
+            .WithGridItemsCount();
+
+        _grid = client.Grid;
+
+        _task = client.UpdateGrid();
+        await _task;
+    }
+}
