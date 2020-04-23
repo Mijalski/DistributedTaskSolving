@@ -12,13 +12,15 @@ namespace DistributedTaskSolving.Application.Business.JobSystem.JobInstances.Hub
         private HubConnection _hubConnection;
         private bool _started = false;
 
+        public string LastMessageFromServer { get; set; }
+
         public JobInstanceHubClient(NavigationManager navigationManager)
         {
             _navigationManager = navigationManager;
         }
 
 
-        public async Task StartAsync()
+        public async Task StartWorkAsync(string jobTypeName)
         {
             if (!_started)
             {
@@ -28,7 +30,7 @@ namespace DistributedTaskSolving.Application.Business.JobSystem.JobInstances.Hub
 
                 await _hubConnection.StartAsync();
                 _started = true;
-                await _hubConnection.SendAsync("StartWork");
+                await _hubConnection.SendAsync("StartWorkOnJobType", jobTypeName);
             }
         }
 
@@ -39,6 +41,11 @@ namespace DistributedTaskSolving.Application.Business.JobSystem.JobInstances.Hub
 
         private void ReceiveNoWorkToBeDone()
         {
+        }
+
+        private void ReceiveMessage(string message)
+        {
+            LastMessageFromServer = message;
         }
 
         public ValueTask DisposeAsync()

@@ -43,14 +43,16 @@ namespace DistributedTaskSolving.EntityFrameworkCore.DbContexts
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-            modelBuilder.Entity<JobType>().HasData(
-                new JobType
-                {
-                    Name = "Password Brute Forcing",
-                    Id = Guid.NewGuid(),
-                    Description = "Given a hash of a password, guess the password"
-                }
-            );
+            JobTypeEnums.DefaultJobTypes.ForEach(name =>
+            {
+                modelBuilder.Entity<JobType>().HasData(
+                    new JobType
+                    {
+                        Name = name,
+                        Id = Guid.NewGuid()
+                    }
+                );
+            });
 
             modelBuilder.Entity<ProgrammingLanguage>().HasData(
                 new ProgrammingLanguage

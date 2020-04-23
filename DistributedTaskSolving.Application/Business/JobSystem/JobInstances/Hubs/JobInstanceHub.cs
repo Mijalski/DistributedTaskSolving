@@ -26,20 +26,22 @@ namespace DistributedTaskSolving.Application.Business.JobSystem.JobInstances.Hub
             _jobTypeRepository = jobTypeRepository;
         }
 
-        public async Task StartWorkOnJobType(Guid jobTypeId)
+        public async Task StartWorkOnJobType(string jobTypeName)
         {
             var job = await _jobTypeRepository
                 .GetAll()
                 .Include(_ => _.JobInstances)
-                .SingleOrDefaultAsync(_ => _.Id == jobTypeId);
+                .SingleOrDefaultAsync(_ => _.Name == jobTypeName);
 
-            var oldestUnfinishedJobInstance = job.JobInstances
+            var oldestUnfinishedJobInstance = job
+                .JobInstances
                 .Where(_ => !_.IsSolved)
                 .OrderByDescending(_ => _.CreationDateTime)
                 .FirstOrDefault();
 
             if (oldestUnfinishedJobInstance == null)
             {
+                await Clients.Client(Context.ConnectionId).SendAsync("ReceiveMessage", $"Work for job type {job.Name} is finished");
                 //TODO Create new job instance of this type and start working on it
                 throw new NotImplementedException();
             }
@@ -62,23 +64,6 @@ namespace DistributedTaskSolving.Application.Business.JobSystem.JobInstances.Hub
             if (jobInstance.IsSolved)
             {
                 await Clients.Client(Context.ConnectionId).SendAsync("ReceiveWorkCompleted");
-            }
-
-            var workUnit = await CreateWorkUnit(jobInstance);
-            await Clients.Client(Context.ConnectionId).SendAsync("ReceiveWorkUnit", workUnit.DataIn);
-        }
-
-        public async Task StartWork()
-        {
-            var jobInstance = await _jobInstanceRepository
-                .GetAll()
-                .Where(_ => !_.IsSolved)
-                .OrderByDescending(_ => _.CreationDateTime)
-                .FirstOrDefaultAsync();
-
-            if (jobInstance == null)
-            {
-                await Clients.Client(Context.ConnectionId).SendAsync("ReceiveNoWorkToBeDone");
             }
 
             var workUnit = await CreateWorkUnit(jobInstance);
