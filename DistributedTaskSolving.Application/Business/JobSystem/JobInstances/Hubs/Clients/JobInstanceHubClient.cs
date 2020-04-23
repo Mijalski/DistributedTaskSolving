@@ -11,9 +11,7 @@ namespace DistributedTaskSolving.Application.Business.JobSystem.JobInstances.Hub
         private readonly NavigationManager _navigationManager;
         private HubConnection _hubConnection;
         private bool _started = false;
-
-        public string LastMessageFromServer { get; set; }
-
+        
         public JobInstanceHubClient(NavigationManager navigationManager)
         {
             _navigationManager = navigationManager;
@@ -28,10 +26,16 @@ namespace DistributedTaskSolving.Application.Business.JobSystem.JobInstances.Hub
                     .WithUrl(_navigationManager.ToAbsoluteUri(HubUrl))
                     .Build();
 
-                await _hubConnection.StartAsync();
+                await _hubConnection.StartAsync().ContinueWith(task =>
+                {
+                    _hubConnection.On<string>("ReceiveMessage", ReceiveMessage);
+                    _hubConnection.On<string>("ReceiveWorkUnit", ReceiveWorkUnit);
+                });
+
                 _started = true;
-                await _hubConnection.SendAsync("StartWorkOnJobType", jobTypeName);
             }
+
+            await _hubConnection.SendAsync("StartWorkOnJobType", jobTypeName);
         }
 
         private void ReceiveWorkUnit(string dataIn)
@@ -39,13 +43,9 @@ namespace DistributedTaskSolving.Application.Business.JobSystem.JobInstances.Hub
             Console.WriteLine(dataIn);
         }
 
-        private void ReceiveNoWorkToBeDone()
+        public virtual void ReceiveMessage(string message)
         {
-        }
-
-        private void ReceiveMessage(string message)
-        {
-            LastMessageFromServer = message;
+            Console.WriteLine(message);
         }
 
         public ValueTask DisposeAsync()

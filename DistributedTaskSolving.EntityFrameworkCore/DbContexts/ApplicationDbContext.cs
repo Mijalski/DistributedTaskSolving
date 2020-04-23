@@ -43,16 +43,23 @@ namespace DistributedTaskSolving.EntityFrameworkCore.DbContexts
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-            JobTypeEnums.DefaultJobTypes.ForEach(name =>
-            {
-                modelBuilder.Entity<JobType>().HasData(
-                    new JobType
-                    {
-                        Name = name,
-                        Id = Guid.NewGuid()
-                    }
-                );
-            });
+            modelBuilder.Entity<JobType>().HasData(
+                new JobType
+                {
+                    Name = JobTypeEnums.PasswordBruteForcing,
+                    Id = Guid.NewGuid()
+                },
+                new JobType
+                {
+                    Name = JobTypeEnums.MonteCarlo,
+                    Id = Guid.NewGuid()
+                },
+                new JobType
+                {
+                    Name = JobTypeEnums.WordGuessing,
+                    Id = Guid.NewGuid()
+                }
+            );
 
             modelBuilder.Entity<ProgrammingLanguage>().HasData(
                 new ProgrammingLanguage

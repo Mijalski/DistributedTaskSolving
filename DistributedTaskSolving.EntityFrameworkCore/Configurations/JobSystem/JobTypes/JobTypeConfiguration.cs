@@ -12,6 +12,7 @@ namespace DistributedTaskSolving.EntityFrameworkCore.Configurations.JobSystem.Jo
             builder.ToTable("App.JobSystem.JobType");
             builder.Property(_ => _.Id).ValueGeneratedOnAdd();
             builder.HasIndex(_ => _.Id);
+            builder.HasIndex(_ => _.Name).IsUnique();
         }
     }
 }

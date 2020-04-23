@@ -32,7 +32,6 @@ else
     {
         Action<IGridColumnCollection<JobTypeDto>> columns = c =>
         {
-            c.Add(o => o.Id).SetPrimaryKey(true).SetCrudHidden(true);
             c.Add(o => o.Name);
             c.Add(o => o.Description);
             c.Add(o => o.CreationDateTime).SetCrudHidden(true);

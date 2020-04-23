@@ -43,7 +43,7 @@ namespace DistributedTaskSolving.Application.Business.JobSystem.JobInstances.Hub
             {
                 await Clients.Client(Context.ConnectionId).SendAsync("ReceiveMessage", $"Work for job type {job.Name} is finished");
                 //TODO Create new job instance of this type and start working on it
-                throw new NotImplementedException();
+                return;
             }
 
             var workUnit = await CreateWorkUnit(oldestUnfinishedJobInstance);
