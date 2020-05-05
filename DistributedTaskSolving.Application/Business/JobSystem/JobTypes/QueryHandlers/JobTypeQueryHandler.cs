@@ -34,7 +34,6 @@ namespace DistributedTaskSolving.Application.Business.JobSystem.JobTypes.QueryHa
             var query = _repository
                 .GetAll()
                 .Include(_ => _.Algorithms)
-                    .ThenInclude(_ => _.ProgrammingLanguage)
                 .AsNoTracking()
                 .ProjectTo<JobTypeDto>(_mapper.ConfigurationProvider);
 

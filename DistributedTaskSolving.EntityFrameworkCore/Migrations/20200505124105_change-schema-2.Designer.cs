@@ -3,15 +3,17 @@ using System;
 using DistributedTaskSolving.EntityFrameworkCore.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DistributedTaskSolving.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200505124105_change-schema-2")]
+    partial class changeschema2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -227,21 +229,21 @@ namespace DistributedTaskSolving.EntityFrameworkCore.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("f5493337-0781-42a6-8620-e6d6f44ca2c2"),
+                            Id = new Guid("0ab463d6-2216-44bf-b578-f01a490cf7a0"),
                             CreationDateTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "PasswordBruteForcing"
                         },
                         new
                         {
-                            Id = new Guid("e63c5e76-0b69-41e1-9b66-98e469ec86d0"),
+                            Id = new Guid("78dbffb0-2ec4-4538-9209-502ebd4ee53b"),
                             CreationDateTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "MonteCarlo"
                         },
                         new
                         {
-                            Id = new Guid("d3b3c065-dd09-406f-89e0-320c6e13b1db"),
+                            Id = new Guid("71ac9ce1-0d1a-4889-903f-5a8521dc4c86"),
                             CreationDateTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "WordGuessing"
@@ -255,7 +257,7 @@ namespace DistributedTaskSolving.EntityFrameworkCore.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<long?>("AlgorithmId")
+                    b.Property<long>("AlgorithmId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreationDateTime")
@@ -279,7 +281,7 @@ namespace DistributedTaskSolving.EntityFrameworkCore.Migrations
                     b.Property<long>("JobInstanceId")
                         .HasColumnType("bigint");
 
-                    b.Property<int?>("ProgrammingLanguageId")
+                    b.Property<int>("ProgrammingLanguageId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -331,21 +333,21 @@ namespace DistributedTaskSolving.EntityFrameworkCore.Migrations
                         new
                         {
                             Id = 1,
-                            CreationDateTime = new DateTime(2020, 5, 5, 12, 43, 36, 802, DateTimeKind.Utc).AddTicks(7193),
+                            CreationDateTime = new DateTime(2020, 5, 5, 12, 41, 4, 713, DateTimeKind.Utc).AddTicks(2346),
                             IsDeleted = false,
                             Name = "C#"
                         },
                         new
                         {
                             Id = 2,
-                            CreationDateTime = new DateTime(2020, 5, 5, 12, 43, 36, 802, DateTimeKind.Utc).AddTicks(8038),
+                            CreationDateTime = new DateTime(2020, 5, 5, 12, 41, 4, 713, DateTimeKind.Utc).AddTicks(3212),
                             IsDeleted = false,
                             Name = "JavaScript"
                         },
                         new
                         {
                             Id = 3,
-                            CreationDateTime = new DateTime(2020, 5, 5, 12, 43, 36, 802, DateTimeKind.Utc).AddTicks(8057),
+                            CreationDateTime = new DateTime(2020, 5, 5, 12, 41, 4, 713, DateTimeKind.Utc).AddTicks(3237),
                             IsDeleted = false,
                             Name = "Rust"
                         });
@@ -654,7 +656,9 @@ namespace DistributedTaskSolving.EntityFrameworkCore.Migrations
                 {
                     b.HasOne("DistributedTaskSolving.Business.BusinessEntities.JobSystem.Algorithms.Algorithm", "Algorithm")
                         .WithMany()
-                        .HasForeignKey("AlgorithmId");
+                        .HasForeignKey("AlgorithmId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "CreatorUser")
                         .WithMany()
@@ -668,7 +672,9 @@ namespace DistributedTaskSolving.EntityFrameworkCore.Migrations
 
                     b.HasOne("DistributedTaskSolving.Business.BusinessEntities.ProgrammingLanguages.ProgrammingLanguage", "ProgrammingLanguage")
                         .WithMany()
-                        .HasForeignKey("ProgrammingLanguageId");
+                        .HasForeignKey("ProgrammingLanguageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DistributedTaskSolving.Business.BusinessEntities.ProgrammingLanguages.ProgrammingLanguage", b =>

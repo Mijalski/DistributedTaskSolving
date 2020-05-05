@@ -28,24 +28,18 @@ namespace DistributedTaskSolving.Application.Business.JobSystem.JobInstances.Hub
 
                 await _hubConnection.StartAsync().ContinueWith(task =>
                 {
-                    _hubConnection.On<string>("ReceiveMessage", ReceiveMessage);
-                    _hubConnection.On<string>("ReceiveWorkUnit", ReceiveWorkUnit);
+                    _hubConnection.On<long, string>("ReceiveWorkUnit", ReceiveWorkUnit);
                 });
 
                 _started = true;
             }
 
-            await _hubConnection.SendAsync("StartWorkOnJobType", jobTypeName);
+            await _hubConnection.SendAsync("StartWorkOnJobType", jobTypeName, null, null);
         }
 
-        private void ReceiveWorkUnit(string dataIn)
+        public virtual void ReceiveWorkUnit(long workUnitId, string dataIn)
         {
             Console.WriteLine(dataIn);
-        }
-
-        public virtual void ReceiveMessage(string message)
-        {
-            Console.WriteLine(message);
         }
 
         public ValueTask DisposeAsync()

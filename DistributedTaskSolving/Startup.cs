@@ -40,6 +40,14 @@ namespace DistributedTaskSolving
                     opt.RegisterValidatorsFromAssembly(typeof(ApplicationModule).Assembly);
                 });
 
+            services.AddCors(options => options.AddPolicy("CorsPolicy",
+                builder =>
+                {
+                    builder.AllowAnyMethod().AllowAnyHeader()
+                        .WithOrigins("http://localhost:4300")
+                        .AllowCredentials();
+                }));
+
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<ApplicationDbContext>(opt =>
                     opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
@@ -96,6 +104,7 @@ namespace DistributedTaskSolving
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseCors("CorsPolicy");
 
             app.UseAuthentication();
             app.UseAuthorization();

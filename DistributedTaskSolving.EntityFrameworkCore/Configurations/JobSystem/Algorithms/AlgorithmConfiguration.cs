@@ -12,7 +12,6 @@ namespace DistributedTaskSolving.EntityFrameworkCore.Configurations.JobSystem.Al
             builder.Property(_ => _.Id).ValueGeneratedOnAdd();
             builder.HasIndex(_ => _.Id);
             builder.HasOne(_ => _.JobType).WithMany(_ => _.Algorithms).HasForeignKey(_ => _.JobTypeId);
-            builder.HasOne(_ => _.ProgrammingLanguage).WithMany().HasForeignKey(_ => _.ProgrammingLanguageId);
         }
     }
 }

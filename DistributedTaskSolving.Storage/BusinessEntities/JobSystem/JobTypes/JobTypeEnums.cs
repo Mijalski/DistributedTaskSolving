@@ -8,8 +8,8 @@ namespace DistributedTaskSolving.Business.BusinessEntities.JobSystem.JobTypes
 {
     public static class JobTypeEnums
     {
-        public static string PasswordBruteForcing = "PasswordBruteForcing";
-        public static string MonteCarlo = "MonteCarlo";
-        public static string WordGuessing = "WordGuessing";
+        public const string PasswordBruteForcing = "PasswordBruteForcing";
+        public const string MonteCarlo = "MonteCarlo";
+        public const string WordGuessing = "WordGuessing";
     }
 }

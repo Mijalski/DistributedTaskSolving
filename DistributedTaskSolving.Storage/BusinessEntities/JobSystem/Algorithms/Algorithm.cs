@@ -14,7 +14,5 @@ namespace DistributedTaskSolving.Business.BusinessEntities.JobSystem.Algorithms
         public string Name { get; set; }
         public Guid JobTypeId { get; set; }
         public JobType JobType { get; set; }
-        public int ProgrammingLanguageId { get; set; }
-        public ProgrammingLanguage ProgrammingLanguage { get; set; }
     }
 }

@@ -46,11 +46,6 @@ namespace DistributedTaskSolving.Application.Business.JobSystem.Algorithms.Comma
 
             entity = _mapper.Map(request, entity);
 
-
-            entity.ProgrammingLanguage = await _programmingLanguageRepository
-                .GetAll()
-                .SingleOrDefaultAsync(_ => _.Id == request.ProgrammingLanguageId, cancellationToken);
-
             entity.JobType = await _jobTypeRepository
                 .GetAll()
                 .SingleOrDefaultAsync(_ => _.Id == request.JobTypeId, cancellationToken);
