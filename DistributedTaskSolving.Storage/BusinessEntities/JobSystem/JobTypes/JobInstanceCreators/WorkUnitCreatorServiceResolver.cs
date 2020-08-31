@@ -1,7 +1,0 @@
-﻿using DistributedTaskSolving.Business.BusinessEntities.JobSystem.JobInstances.IWorkUnitCreators;
-using DistributedTaskSolving.Business.BusinessEntities.JobSystem.JobTypes.IJobInstanceCreators;
-
-namespace DistributedTaskSolving.Business.BusinessEntities.JobSystem.JobTypes.JobInstanceCreators
-{
-    public delegate IJobInstanceCreator JobInstanceCreatorServiceResolver(string jobTypeName);
-}

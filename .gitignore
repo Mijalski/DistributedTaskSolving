@@ -13,3 +13,6 @@ DistributedTaskSolving/bin/
 */bin/*
 */Debug/*
 DistributedTaskSolving/obj/
+bin/Release/netcoreapp3.1/DistributedTaskSolving.Business.dll
+obj/
+bin/
