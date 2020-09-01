@@ -61,8 +61,8 @@ namespace DistributedTaskSolving
                     builder.AllowAnyMethod().AllowAnyHeader()
                         .WithOrigins("http://localhost:4300")
                         .WithOrigins("http://localhost:8003")
-                        .WithOrigins("http://distributed-wasm.szymonchecinski.pl/")
-                        .WithOrigins("https://distributed-wasm.szymonchecinski.pl/")
+                        .WithOrigins("http://distributed-wasm.szymonchecinski.pl")
+                        .WithOrigins("https://distributed-wasm.szymonchecinski.pl")
                         .AllowCredentials();
                 }));
 
