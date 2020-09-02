@@ -53,11 +53,11 @@
             <ChartJsPieChart @ref="_userAgentPieChartJs" Config="@_userAgentPieConfig" />
         </div>
     </div>
-    <div class="row mt-3">
+    @*<div class="row mt-3">
         <div class="col-12">
             <ChartJsBarChart @ref="_ramSizeBarChartJs" Config="@_ramSizeBarConfig" />
         </div>
-    </div>
+    </div>*@
     <div class="row mt-3">
         <div class="col-12">
             <ChartJsBarChart @ref="_workUnitTimeChartJs" Config="@_workUnitTimeConfig" />
@@ -86,7 +86,7 @@
         await LoadWorkUnits();
 
         LoadUserAgentPieChart();
-        LoadRamSizeBarChart();
+        //LoadRamSizeBarChart();
         LoadWorkUnitTimeBarChart();
 
         LoadMiscData();
@@ -123,6 +123,8 @@
             Id = Item.Id
         });
 
+        _workUnits = _workUnits.Where(_ => _.IsSolved).ToList();
+
         var cpuTimes = _workUnits.Select(x => new
         {
             CpuTime = x.SubmitDateTime == null ? TimeSpan.Zero : (DateTime)x.SubmitDateTime - x.CreationDateTime
@@ -149,7 +151,7 @@
                 {
                     AnimateRotate = true,
                     AnimateScale = true
-                }
+                },
             }
         };
 
@@ -246,10 +248,10 @@
         var workUnitsTimes = _workUnits
             .Where(_ => _.SubmitDateTime.HasValue)
             .GroupBy(x => (x.SubmitDateTime.Value - x.CreationDateTime).Seconds)
-            .OrderByDescending(_ => _.Key)
+            .OrderBy(_ => _.Key)
             .ToList();
 
-        _workUnitTimeConfig.Data.Labels.AddRange(workUnitsTimes.Select(_ => _.Count().ToString()));
+        _workUnitTimeConfig.Data.Labels.AddRange(workUnitsTimes.Select(_ => _.Key.ToString()));
 
         var barDataSet = new BarDataset<string>
         {
