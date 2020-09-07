@@ -1,0 +1,26 @@
+﻿@page "/fileLogs"
+@using DistributedTaskSolving.Application.Business.ApiLogs
+
+@inject IFileLogService FileLogService
+
+<h1>File Logs</h1>
+<pre>
+    @FileLogsText
+</pre>
+
+@code {
+
+    public string FileLogsText = "Loading...";
+    
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetFileLogs();
+    }
+
+    public async Task GetFileLogs()
+    {
+        FileLogsText = await FileLogService.GetFileLogs();
+    }
+
+}

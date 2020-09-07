@@ -6,14 +6,14 @@ namespace DistributedTaskSolving.Application.Shared.Business.ApiLogs.Dto
 {
     public class ApiLogDto : CreationAuditedEntityDto<long>
     {
-        public DateTime RequestTime { get; set; }
-        public long ResponseMillis { get; set; }
-        public int StatusCode { get; set; }
-        public string Method { get; set; }
-        public string Path { get; set; }
-        public string QueryString { get; set; }
-        public string RequestBody { get; set; }
+        public string Level { get; set; }
+        public string Logger { get; set; }
+        public string TraceIdentifier { get; set; }
+        public string RequestMethod { get; set; }
+        public string RequestUrl { get; set; }
+        public string Message { get; set; }
+        public string Exception { get; set; }
+        public int ResponseCode { get; set; }
         public string ResponseBody { get; set; }
-        public string IpAddress { get; set; }
     }
 }

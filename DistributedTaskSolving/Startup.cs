@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using AutoMapper;
 using DistributedTaskSolving.Application;
+using DistributedTaskSolving.Application.Business.ApiLogs;
 using DistributedTaskSolving.Application.Business.JobSystem.JobInstances.Hubs;
 using DistributedTaskSolving.Application.Business.ProgrammingLanguages.QueryGridServices;
 using DistributedTaskSolving.Application.Generics.GridServices;
@@ -94,6 +95,7 @@ namespace DistributedTaskSolving
 
             // Generic injection
             services.AddTransient(typeof(IRepository<,>), typeof(Repository<,>));
+            services.AddTransient(typeof(IFileLogService), typeof(FileLogService));
 
             services.AddTransient(typeof(ICrudGridService<,,,,,>), typeof(CrudGridService<,,,,,>));
             services.AddTransient(typeof(IQueryGridService<,,>), typeof(QueryGridService<,,>));

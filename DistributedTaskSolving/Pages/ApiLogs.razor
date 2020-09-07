@@ -1,0 +1,61 @@
+﻿@page "/ApiLogs"
+@using DistributedTaskSolving.Application.IGenerics.GridServices
+@using DistributedTaskSolving.Application.Shared.Business.ApiLogs.Dto
+@using DistributedTaskSolving.Application.Shared.Business.JobSystem.JobTypes.Dto
+@using DistributedTaskSolving.Application.Shared.Business.ProgrammingLanguages
+@using DistributedTaskSolving.Business.BusinessEntities.ApiLogs
+@using DistributedTaskSolving.Business.BusinessEntities.JobSystem.JobTypes
+@using DistributedTaskSolving.Business.BusinessEntities.ProgrammingLanguages
+@using Microsoft.Extensions.Primitives
+@inject IQueryGridService<JobType, Guid, JobTypeDto> JobTypeQueryService
+@inject IQueryGridService<ProgrammingLanguage, int, ProgrammingLanguageDto> ProgrammingLanguageQueryGridService
+@inject IQueryGridService<ApiLog, long, ApiLogDto> QueryGridService
+
+
+<h1>ApiLogs</h1>
+<p>Implementations in various languages for job types</p>
+
+@if (_task.IsCompleted)
+{
+    <GridComponent T="ApiLogDto" Grid="@_grid"></GridComponent>
+}
+else
+{
+    <p><em>Loading...</em></p>
+}
+
+@code
+{
+    private CGrid<ApiLogDto> _grid;
+    private Task _task;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Action<IGridColumnCollection<ApiLogDto>> columns = c =>
+        {
+            c.Add(o => o.Id).SetPrimaryKey(true).SetCrudHidden(true);
+            c.Add(o => o.Level);
+            c.Add(o => o.CreationDateTime);
+            c.Add(o => o.Logger);
+            c.Add(o => o.TraceIdentifier);
+            c.Add(o => o.Exception);
+            c.Add(o => o.ResponseCode);
+            c.Add(o => o.ResponseBody);
+            c.Add(o => o.RequestUrl);
+            c.Add(o => o.RequestMethod);
+        };
+
+        var query = new QueryDictionary<StringValues>();
+
+        var client = new GridClient<ApiLogDto>(q => QueryGridService.GetAll(q), query, false, "ApiLogsGrid", columns)
+            .Sortable(true)
+            .SetStriped(true)
+            .ChangePageSize(true)
+            .WithGridItemsCount();
+
+        _grid = client.Grid;
+
+        _task = client.UpdateGrid();
+        await _task;
+    }
+}

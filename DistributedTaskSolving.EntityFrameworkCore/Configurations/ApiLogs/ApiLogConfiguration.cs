@@ -11,12 +11,9 @@ namespace DistributedTaskSolving.EntityFrameworkCore.Configurations.ApiLogs
             builder.ToTable("App.ApiLogs");
             builder.HasIndex(_ => _.Id);
             builder.Property(_ => _.Id).ValueGeneratedOnAdd();
-            builder.Property(e => e.IpAddress).HasMaxLength(45);
-            builder.Property(e => e.Method).HasMaxLength(256);
-            builder.Property(e => e.Path).HasMaxLength(2048);
-            builder.Property(e => e.Method).HasMaxLength(2048);
-            builder.Property(e => e.QueryString).HasMaxLength(2048);
-            builder.Property(e => e.RequestBody).HasMaxLength(2048);
+            builder.Property(e => e.Level).HasMaxLength(20);
+            builder.Property(e => e.RequestUrl).HasMaxLength(256);
+            builder.Property(e => e.ResponseCode).HasMaxLength(10);
         }
     }
 }

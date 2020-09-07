@@ -143,6 +143,7 @@ namespace DistributedTaskSolving.Application.Business.JobSystem.JobInstances.Hub
             };
             workUnit.ConnectionId = Context.ConnectionId;
 
+            throw new ArgumentException("THIS IS A SIMPLE TEST!");
             await _workUnitRepository.UpdateAsync(workUnit);
             await _workUnitRepository.SaveChangesAsync();
 

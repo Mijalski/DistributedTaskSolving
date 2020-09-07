@@ -4,18 +4,16 @@ using DistributedTaskSolving.Business.IGenerics;
 
 namespace DistributedTaskSolving.Business.BusinessEntities.ApiLogs
 {
-    public class ApiLog : CreationAuditedEntity, ISoftDelete
+    public class ApiLog : CreationAuditedEntity
     {
-        public DateTime RequestTime { get; set; }
-        public long ResponseMillis { get; set; }
-        public int StatusCode { get; set; }
-        public string Method { get; set; }
-        public string Path { get; set; }
-        public string QueryString { get; set; }
-        public string RequestBody { get; set; }
+        public string Level { get; set; }
+        public string Logger { get; set; }
+        public string TraceIdentifier { get; set; }
+        public string RequestMethod { get; set; }
+        public string RequestUrl { get; set; }
+        public string Message { get; set; }
+        public string Exception { get; set; }
+        public int ResponseCode { get; set; }
         public string ResponseBody { get; set; }
-        public string IpAddress { get; set; }
-        public bool IsDeleted { get; set; }
-        public DateTime? DeletionDateTime { get; set; }
     }
 }
