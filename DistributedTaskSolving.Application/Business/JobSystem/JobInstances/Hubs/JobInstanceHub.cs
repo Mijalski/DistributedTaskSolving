@@ -17,6 +17,7 @@ using DistributedTaskSolving.Business.BusinessEntities.ProgrammingLanguages;
 using DistributedTaskSolving.EntityFrameworkCore.Repositories;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace DistributedTaskSolving.Application.Business.JobSystem.JobInstances.Hubs
 {
@@ -30,6 +31,7 @@ namespace DistributedTaskSolving.Application.Business.JobSystem.JobInstances.Hub
         private readonly WorkUnitCreatorServiceResolver _workUnitCreatorServiceResolver;
         private readonly WorkUnitFinisherServiceResolver _workUnitFinisherServiceResolver;
         private readonly JobInstanceCreatorServiceResolver _jobInstanceCreatorServiceResolver;
+        private readonly ILogger<JobInstanceHub> _logger;
         private static JobInstance _jobInstance;
         private static SemaphoreSlim _jobInstanceSemaphore = new SemaphoreSlim(1, 1);
 
@@ -40,7 +42,8 @@ namespace DistributedTaskSolving.Application.Business.JobSystem.JobInstances.Hub
             IRepository<Algorithm, long> algorithmRepository,
             WorkUnitCreatorServiceResolver workUnitCreatorServiceResolver,
             WorkUnitFinisherServiceResolver workUnitFinisherServiceResolver,
-            JobInstanceCreatorServiceResolver jobInstanceCreatorServiceResolver)
+            JobInstanceCreatorServiceResolver jobInstanceCreatorServiceResolver,
+            ILogger<JobInstanceHub> logger)
         {
             _workUnitRepository = workUnitRepository;
             _jobInstanceRepository = jobInstanceRepository;
@@ -50,13 +53,12 @@ namespace DistributedTaskSolving.Application.Business.JobSystem.JobInstances.Hub
             _workUnitCreatorServiceResolver = workUnitCreatorServiceResolver;
             _workUnitFinisherServiceResolver = workUnitFinisherServiceResolver;
             _jobInstanceCreatorServiceResolver = jobInstanceCreatorServiceResolver;
+            _logger = logger;
         }
 
         public async Task StartWorkOnJobType(string jobTypeName, WorkUnitClientDto workUnitClientDto,
             string algorithmName, string programmingLanguageName)
         {
-            var stopwatch = Stopwatch.StartNew();
-
             var oldestUnfinishedJobInstanceId = await _jobInstanceRepository
                         .GetAll()
                         .Where(_ => !_.IsSolved && _.JobType.Name == jobTypeName)
@@ -71,9 +73,6 @@ namespace DistributedTaskSolving.Application.Business.JobSystem.JobInstances.Hub
 
             var workUnit = await CreateWorkUnit(oldestUnfinishedJobInstanceId, workUnitClientDto, jobTypeName);
 
-            stopwatch.Stop();
-            Console.WriteLine($"StartWorkOnJobType: {stopwatch.ElapsedMilliseconds}");
-
             if (workUnit != null)
             {
                 await Clients.Client(Context.ConnectionId).SendAsync("ReceiveWorkUnit", workUnit.Id, workUnit.DataIn, workUnit.JobInstanceId);
@@ -82,29 +81,34 @@ namespace DistributedTaskSolving.Application.Business.JobSystem.JobInstances.Hub
 
         public async Task FinishWorkUnit(long workUnitId, string data, bool isSolved, string jobTypeName)
         {
-            var stopwatch = Stopwatch.StartNew();
-            var workUnit = await _workUnitRepository
-                .GetAll()
-                .FirstOrDefaultAsync(_ => _.Id == workUnitId);
-
-            var workUnitFinisher = _workUnitFinisherServiceResolver(jobTypeName);
-
-            var isJobInstanceFinished = await workUnitFinisher.FinishWorkUnitAsync(workUnit, data, isSolved);
-
-            stopwatch.Stop();
-            Console.WriteLine($"FinishWorkUnit: {stopwatch.ElapsedMilliseconds}");
-
-            if (isJobInstanceFinished)
+            try
             {
-                var jobInstance = await _jobInstanceRepository
+                var workUnit = await _workUnitRepository
                     .GetAll()
-                    .Include(i => i.WorkUnits)
-                    .FirstAsync(i => i.Id == workUnit.JobInstanceId);
-                workUnitFinisher.FinishJobInstance(jobInstance);
-            }
+                    .FirstOrDefaultAsync(_ => _.Id == workUnitId);
 
-            await _workUnitRepository.UpdateAsync(workUnit);
-            await _workUnitRepository.SaveChangesAsync();
+                var workUnitFinisher = _workUnitFinisherServiceResolver(jobTypeName);
+
+                var isJobInstanceFinished = await workUnitFinisher.FinishWorkUnitAsync(workUnit, data, isSolved);
+
+                if (isJobInstanceFinished)
+                {
+                    var jobInstance = await _jobInstanceRepository
+                        .GetAll()
+                        .Include(i => i.WorkUnits)
+                        .FirstAsync(i => i.Id == workUnit.JobInstanceId);
+                    workUnitFinisher.FinishJobInstance(jobInstance);
+                    await _jobInstanceRepository.UpdateAsync(jobInstance);
+                    await _jobInstanceRepository.SaveChangesAsync();
+                }
+
+                await _workUnitRepository.UpdateAsync(workUnit);
+                await _workUnitRepository.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Exception during FinishWorkUnit");
+            }
         }
 
         private async Task<long> CreateJobInstance(string jobTypeName)
