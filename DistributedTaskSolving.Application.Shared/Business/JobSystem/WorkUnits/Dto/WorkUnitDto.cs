@@ -19,5 +19,6 @@ namespace DistributedTaskSolving.Application.Shared.Business.JobSystem.WorkUnits
         public string UserAgent { get; set; }
         public string RamSize { get; set; }
         public string ConnectionId { get; set; }
+        public double ExecutionTimeInMs { get; set; }
     }
 }

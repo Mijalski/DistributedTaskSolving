@@ -32,12 +32,10 @@ else
             c.Add(o => o.Id).SetPrimaryKey(true);
             c.Add(o => o.JobTypeName).Titled("Job Type");
             c.Add(o => o.JobInstanceId).Titled("Job Instance");
-            c.Add(o => o.ProgrammingLanguageName);
-            c.Add(o => o.AlgorithmName);
-            c.Add(o => o.DataIn);
-        //c.Add(o => o.DataOut);
-        c.Add(o => o.IsSolved);
+            //c.Add(o => o.DataOut);
+            c.Add(o => o.IsSolved);
             c.Add(o => o.IsAbandoned);
+            c.Add(o => o.ExecutionTimeInMs);
             c.Add(o => o.CreationDateTime);
             c.Add(o => o.SubmitDateTime);
         };

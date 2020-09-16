@@ -20,10 +20,12 @@
 
 <div class="row">
     <div class="col-12">
-        <div class="text-break">Key: 
+        <div class="text-break">
+            Key:
             <p><pre class="pre-scrollable">@Item.Key</pre></p>
         </div>
-        <div class="text-break" style="max-width: 75vw">Result: 
+        <div class="text-break" style="max-width: 75vw">
+            Result:
             <p><pre class="pre-scrollable">@(string.IsNullOrEmpty(Item.Result) ? "n/a" : Item.Result)</pre></p>
         </div>
 
@@ -43,9 +45,12 @@
     <h3 class="text-center">CPU time: @_cpuTime.ToString("c")</h3>
     <h3 class="text-center">Work unit count: @_workUnits.Count</h3>
     <h3 class="text-center">Unique clients count: @_uniqueWorkUnitConnectionIds</h3>
-    <h3 class="text-center">Max work unit CPU time: @_maxWorkUnitTime</h3>
-    <h3 class="text-center">Min work unit CPU time: @_minWorkUnitTime</h3>
-    <h3 class="text-center">Mean work unit CPU time: @_meanWorkUnitTime</h3>
+    <h3 class="text-center">Max work unit overall time: @_maxWorkUnitTime</h3>
+    <h3 class="text-center">Min work unit overall time: @_minWorkUnitTime</h3>
+    <h3 class="text-center">Mean work unit overall time: @_meanWorkUnitTime</h3>
+    <h3 class="text-center">Max work unit CPU time: @_maxWorkUnitCpuTime</h3>
+    <h3 class="text-center">Min work unit CPU time: @_minWorkUnitCpuTime</h3>
+    <h3 class="text-center">Mean work unit CPU time: @_meanWorkUnitCpuTime</h3>
     <h3 class="text-center">Mean work unit count time per hour: @_meanWorkUnitCountPerHour.ToString("F")</h3>
 
     <div class="row">
@@ -54,10 +59,10 @@
         </div>
     </div>
     @*<div class="row mt-3">
-        <div class="col-12">
-            <ChartJsBarChart @ref="_ramSizeBarChartJs" Config="@_ramSizeBarConfig" />
-        </div>
-    </div>*@
+            <div class="col-12">
+                <ChartJsBarChart @ref="_ramSizeBarChartJs" Config="@_ramSizeBarConfig" />
+            </div>
+        </div>*@
     <div class="row mt-3">
         <div class="col-12">
             <ChartJsBarChart @ref="_workUnitTimeChartJs" Config="@_workUnitTimeConfig" />
@@ -80,6 +85,9 @@
     TimeSpan _meanWorkUnitTime;
     TimeSpan _maxWorkUnitTime;
     TimeSpan _minWorkUnitTime;
+    TimeSpan _meanWorkUnitCpuTime;
+    TimeSpan _maxWorkUnitCpuTime;
+    TimeSpan _minWorkUnitCpuTime;
 
     protected override async Task OnInitializedAsync()
     {
@@ -114,6 +122,24 @@
 
         var minWorkUnitTicks = workUnitTicks.Min();
         _minWorkUnitTime = new TimeSpan(Convert.ToInt64(minWorkUnitTicks));
+
+
+        var workUnitCpuTimes = _workUnits
+            .Where(_ => _.ExecutionTimeInMs > 0)
+            .Select(_ => _.ExecutionTimeInMs)
+            .ToList();
+
+        if (workUnitCpuTimes.Any())
+        {
+            var averageWorkUnitCpuTime = workUnitCpuTimes.Average();
+            _meanWorkUnitCpuTime = TimeSpan.FromMilliseconds(averageWorkUnitCpuTime);
+
+            var maxWorkUnitCpuTicks = workUnitCpuTimes.Max();
+            _maxWorkUnitCpuTime = TimeSpan.FromMilliseconds(maxWorkUnitCpuTicks);
+
+            var minWorkUnitCpuTicks = workUnitCpuTimes.Min();
+            _minWorkUnitCpuTime = TimeSpan.FromMilliseconds(minWorkUnitCpuTicks);
+        }
     }
 
     public async Task LoadWorkUnits()
