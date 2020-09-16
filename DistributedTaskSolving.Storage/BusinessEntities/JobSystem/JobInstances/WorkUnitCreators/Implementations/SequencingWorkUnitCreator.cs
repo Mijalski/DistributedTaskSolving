@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using DistributedTaskSolving.Business.BusinessEntities.JobSystem.Algorithms;
 using DistributedTaskSolving.Business.BusinessEntities.JobSystem.JobInstances.IWorkUnitCreators;
@@ -14,6 +15,7 @@ namespace DistributedTaskSolving.Business.BusinessEntities.JobSystem.JobInstance
     public class SequencingWorkUnitCreator : IWorkUnitCreator
     {
         private readonly ISequencingService _sequencingService;
+        private static readonly SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(1, 1);
 
         public SequencingWorkUnitCreator(ISequencingService sequencingService)
         {
@@ -27,24 +29,35 @@ namespace DistributedTaskSolving.Business.BusinessEntities.JobSystem.JobInstance
             {
                 JobInstanceId = jobInstanceId,
                 Algorithm = algorithm,
-                ProgrammingLanguage = programmingLanguage
+                ProgrammingLanguage = programmingLanguage,
+                CreationDateTime = DateTime.UtcNow
             };
 
             var jobInstance = await _sequencingService.GetJobInstanceAsync(jobInstanceId);
+            var jobInstanceVertices = jobInstance.GetKeyObject().Vertices;
 
-            var usedVerticesAtoms = _sequencingService.GetUsedVertices();
-            var notUsedVertices =
-                jobInstance.GetKeyObject().Vertices.Where(v => !usedVerticesAtoms.Contains(v)).ToList();
+            await _semaphoreSlim.WaitAsync();
 
-            if (!notUsedVertices.Any())
+            try
             {
-                return null; // do not generate work unit if all vertices used
+                var usedVerticesAtoms = _sequencingService.GetUsedVertices();
+                var notUsedVertices =
+                    jobInstanceVertices.Where(v => !usedVerticesAtoms.Contains(v)).ToList();
+
+                if (!notUsedVertices.Any())
+                {
+                    return null; // do not generate work unit if all vertices used
+                }
+
+                var atom = notUsedVertices.First();
+                workUnit.DataIn = atom;
+
+                _sequencingService.AddOrUpdateWorkUnit(workUnit);
             }
-
-            var atom = notUsedVertices[new Random().Next(notUsedVertices.Count)];
-            workUnit.DataIn = atom;
-
-            _sequencingService.AddOrUpdateWorkUnit(workUnit);
+            finally
+            {
+                _semaphoreSlim.Release();
+            }
 
             return workUnit;
         }

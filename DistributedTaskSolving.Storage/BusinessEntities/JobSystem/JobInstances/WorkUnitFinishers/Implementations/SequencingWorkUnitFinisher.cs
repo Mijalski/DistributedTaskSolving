@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using DistributedTaskSolving.Business.BusinessEntities.JobSystem.Algorithms;
 using DistributedTaskSolving.Business.BusinessEntities.JobSystem.JobInstances.IWorkUnitFinishers;
-using DistributedTaskSolving.Business.BusinessEntities.JobSystem.JobInstances.Jsons;
 using DistributedTaskSolving.Business.BusinessEntities.JobSystem.WorkUnits;
 using DistributedTaskSolving.Business.Services;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace DistributedTaskSolving.Business.BusinessEntities.JobSystem.JobInstances.WorkUnitFinishers.Implementations
 {
@@ -30,11 +25,12 @@ namespace DistributedTaskSolving.Business.BusinessEntities.JobSystem.JobInstance
                 .GroupBy(r => r.UsedVerticesPercentage).OrderByDescending(g => g.Key).First();
             jobInstance.Result = JsonSerializer.Serialize(bestResults.AsEnumerable());
             jobInstance.IsSolved = true;
+            jobInstance.FinishDateTime = DateTime.UtcNow;
         }
 
         public void FinishAbandonedWorkUnit(WorkUnit workUnit)
         {
-            _sequencingService.RemoveWorkUnit(workUnit.Id);
+            _sequencingService.RemoveWorkUnit(workUnit.DataIn);
         }
 
         public async Task<bool> FinishWorkUnitAsync(WorkUnit workUnit, string dataOut, bool isSolved)

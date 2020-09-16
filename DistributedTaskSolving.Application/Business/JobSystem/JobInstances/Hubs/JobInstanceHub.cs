@@ -59,16 +59,27 @@ namespace DistributedTaskSolving.Application.Business.JobSystem.JobInstances.Hub
         public async Task StartWorkOnJobType(string jobTypeName, WorkUnitClientDto workUnitClientDto,
             string algorithmName, string programmingLanguageName)
         {
-            var oldestUnfinishedJobInstanceId = await _jobInstanceRepository
-                        .GetAll()
-                        .Where(_ => !_.IsSolved && _.JobType.Name == jobTypeName)
-                        .OrderByDescending(_ => _.CreationDateTime)
-                        .Select(i => i.Id)
-                        .FirstOrDefaultAsync();
+            await _jobInstanceSemaphore.WaitAsync();
 
-            if (oldestUnfinishedJobInstanceId == 0)
+            var oldestUnfinishedJobInstanceId = 0L;
+
+            try
             {
-                oldestUnfinishedJobInstanceId = await CreateJobInstance(jobTypeName);
+                oldestUnfinishedJobInstanceId = await _jobInstanceRepository
+                            .GetAll()
+                            .Where(_ => !_.IsSolved && _.JobType.Name == jobTypeName)
+                            .OrderByDescending(_ => _.CreationDateTime)
+                            .Select(i => i.Id)
+                            .FirstOrDefaultAsync();
+
+                if (oldestUnfinishedJobInstanceId == 0)
+                {
+                    oldestUnfinishedJobInstanceId = await CreateJobInstance(jobTypeName);
+                }
+            }
+            finally
+            {
+                _jobInstanceSemaphore.Release();
             }
 
             var workUnit = await CreateWorkUnit(oldestUnfinishedJobInstanceId, workUnitClientDto, jobTypeName);
@@ -76,6 +87,12 @@ namespace DistributedTaskSolving.Application.Business.JobSystem.JobInstances.Hub
             if (workUnit != null)
             {
                 await Clients.Client(Context.ConnectionId).SendAsync("ReceiveWorkUnit", workUnit.Id, workUnit.DataIn, workUnit.JobInstanceId);
+            }
+            else
+            {
+                //retry
+                await Task.Delay(5000);
+                await StartWorkOnJobType(jobTypeName, workUnitClientDto, algorithmName, programmingLanguageName);
             }
         }
 

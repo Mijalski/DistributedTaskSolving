@@ -20,7 +20,7 @@ namespace DistributedTaskSolving.Application.Business.JobSystem.Services
 
         private static JobInstance _jobInstance;
 
-        private static ConcurrentDictionary<long, WorkUnit> _workUnits;
+        private static ConcurrentDictionary<string, WorkUnit> _workUnits;
 
         public SequencingService(IRepository<JobInstance, long> jobInstanceRepository)
         {
@@ -38,7 +38,7 @@ namespace DistributedTaskSolving.Application.Business.JobSystem.Services
                     _jobInstance = await _jobInstanceRepository.GetAll()
                         .Include(i => i.WorkUnits)
                         .FirstAsync(i => i.Id == id);
-                    _workUnits = new ConcurrentDictionary<long, WorkUnit>(_jobInstance.WorkUnits.ToDictionary(u => u.Id, u => u));
+                    _workUnits = new ConcurrentDictionary<string, WorkUnit>(_jobInstance.WorkUnits.ToDictionary(u => u.DataIn, u => u));
 
                     return _jobInstance;
                 }
@@ -53,17 +53,17 @@ namespace DistributedTaskSolving.Application.Business.JobSystem.Services
 
         public void AddOrUpdateWorkUnit(WorkUnit unit)
         {
-            _workUnits.AddOrUpdate(unit.Id, unit, (_, wu) => unit);
+            _workUnits.AddOrUpdate(unit.DataIn, unit, (_, wu) => unit);
         }
 
-        public void RemoveWorkUnit(long id)
+        public void RemoveWorkUnit(string dataIn)
         {
-            _workUnits.Remove(id, out _);
+            _workUnits.Remove(dataIn, out _);
         }
 
         public IEnumerable<string> GetUsedVertices()
         {
-            var staleDate = DateTime.UtcNow - TimeSpan.FromMinutes(5);
+            var staleDate = DateTime.UtcNow - TimeSpan.FromMinutes(10);
             return _workUnits.Values.Where(w => (w.CreationDateTime > staleDate || w.IsSolved) && !w.IsAbandoned).Select(u => u.DataIn);
         }
 

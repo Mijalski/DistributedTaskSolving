@@ -11,6 +11,6 @@ namespace DistributedTaskSolving.Business.Services
         Task<JobInstance> GetJobInstanceAsync(long id);
         IEnumerable<string> GetSolvedVertices();
         IEnumerable<string> GetUsedVertices();
-        void RemoveWorkUnit(long id);
+        void RemoveWorkUnit(string dataIn);
     }
 }

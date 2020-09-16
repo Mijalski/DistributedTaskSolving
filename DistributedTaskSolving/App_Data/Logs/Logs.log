@@ -1,0 +1,62 @@
+WARN [2020-09-16 19:37:37.1989]  Microsoft.EntityFrameworkCore.Infrastructure    'AddEntityFramework*' was called on the service provider, but 'UseInternalServiceProvider' wasn't called in the DbContext options configuration. Remove the 'AddEntityFramework*' call as in most cases it's not needed and might cause conflicts with other products and services registered in the same service provider.  
+WARN [2020-09-16 19:37:47.7726]  Microsoft.EntityFrameworkCore.Infrastructure    'AddEntityFramework*' was called on the service provider, but 'UseInternalServiceProvider' wasn't called in the DbContext options configuration. Remove the 'AddEntityFramework*' call as in most cases it's not needed and might cause conflicts with other products and services registered in the same service provider.  
+WARN [2020-09-16 19:38:42.5025]  Microsoft.EntityFrameworkCore.Infrastructure    'AddEntityFramework*' was called on the service provider, but 'UseInternalServiceProvider' wasn't called in the DbContext options configuration. Remove the 'AddEntityFramework*' call as in most cases it's not needed and might cause conflicts with other products and services registered in the same service provider.  
+WARN [2020-09-16 19:38:56.8297]  Microsoft.EntityFrameworkCore.Infrastructure    'AddEntityFramework*' was called on the service provider, but 'UseInternalServiceProvider' wasn't called in the DbContext options configuration. Remove the 'AddEntityFramework*' call as in most cases it's not needed and might cause conflicts with other products and services registered in the same service provider.  
+WARN [2020-09-16 19:42:57.2216]  Microsoft.EntityFrameworkCore.Infrastructure    'AddEntityFramework*' was called on the service provider, but 'UseInternalServiceProvider' wasn't called in the DbContext options configuration. Remove the 'AddEntityFramework*' call as in most cases it's not needed and might cause conflicts with other products and services registered in the same service provider.  
+WARN [2020-09-16 19:43:11.5481]  Microsoft.EntityFrameworkCore.Infrastructure    'AddEntityFramework*' was called on the service provider, but 'UseInternalServiceProvider' wasn't called in the DbContext options configuration. Remove the 'AddEntityFramework*' call as in most cases it's not needed and might cause conflicts with other products and services registered in the same service provider.  
+WARN [2020-09-16 19:43:26.9943]  Microsoft.EntityFrameworkCore.Infrastructure    'AddEntityFramework*' was called on the service provider, but 'UseInternalServiceProvider' wasn't called in the DbContext options configuration. Remove the 'AddEntityFramework*' call as in most cases it's not needed and might cause conflicts with other products and services registered in the same service provider.  
+WARN [2020-09-16 19:43:48.2605]  Microsoft.EntityFrameworkCore.Infrastructure    'AddEntityFramework*' was called on the service provider, but 'UseInternalServiceProvider' wasn't called in the DbContext options configuration. Remove the 'AddEntityFramework*' call as in most cases it's not needed and might cause conflicts with other products and services registered in the same service provider.  
+WARN [2020-09-16 19:47:11.5077]  Microsoft.EntityFrameworkCore.Infrastructure    'AddEntityFramework*' was called on the service provider, but 'UseInternalServiceProvider' wasn't called in the DbContext options configuration. Remove the 'AddEntityFramework*' call as in most cases it's not needed and might cause conflicts with other products and services registered in the same service provider.  
+WARN [2020-09-16 19:51:40.3622]  Microsoft.EntityFrameworkCore.Infrastructure    'AddEntityFramework*' was called on the service provider, but 'UseInternalServiceProvider' wasn't called in the DbContext options configuration. Remove the 'AddEntityFramework*' call as in most cases it's not needed and might cause conflicts with other products and services registered in the same service provider.  
+WARN [2020-09-16 19:51:48.6695]  Microsoft.EntityFrameworkCore.Infrastructure    'AddEntityFramework*' was called on the service provider, but 'UseInternalServiceProvider' wasn't called in the DbContext options configuration. Remove the 'AddEntityFramework*' call as in most cases it's not needed and might cause conflicts with other products and services registered in the same service provider.  
+INFO [2020-09-16 19:52:07.7672]  Microsoft.Hosting.Lifetime    Now listening on: https://localhost:5001  
+INFO [2020-09-16 19:52:07.8126]  Microsoft.Hosting.Lifetime    Now listening on: http://localhost:5000  
+INFO [2020-09-16 19:52:07.8126]  Microsoft.Hosting.Lifetime    Application started. Press Ctrl+C to shut down.  
+INFO [2020-09-16 19:52:07.8126]  Microsoft.Hosting.Lifetime    Hosting environment: Development  
+INFO [2020-09-16 19:52:07.8321]  Microsoft.Hosting.Lifetime    Content root path: C:\Users\Hubert Mijalski\Documents\distributed-wasm\server\DistributedTaskSolving  
+WARN [2020-09-16 19:52:16.9840]  Microsoft.EntityFrameworkCore.Infrastructure |b301ace2-447a54000b18e007. GET https://localhost/_blazor 'AddEntityFramework*' was called on the service provider, but 'UseInternalServiceProvider' wasn't called in the DbContext options configuration. Remove the 'AddEntityFramework*' call as in most cases it's not needed and might cause conflicts with other products and services registered in the same service provider.  
+INFO [2020-09-16 20:05:04.9068]  Microsoft.Hosting.Lifetime    Now listening on: https://localhost:5001  
+INFO [2020-09-16 20:05:04.9526]  Microsoft.Hosting.Lifetime    Now listening on: http://localhost:5000  
+INFO [2020-09-16 20:05:04.9526]  Microsoft.Hosting.Lifetime    Application started. Press Ctrl+C to shut down.  
+INFO [2020-09-16 20:05:04.9526]  Microsoft.Hosting.Lifetime    Hosting environment: Development  
+INFO [2020-09-16 20:05:04.9714]  Microsoft.Hosting.Lifetime    Content root path: C:\Users\Hubert Mijalski\Documents\distributed-wasm\server\DistributedTaskSolving  
+WARN [2020-09-16 20:05:17.3673]  Microsoft.EntityFrameworkCore.Infrastructure |41314f64-4da4b44198365ce0. GET https://localhost/_blazor 'AddEntityFramework*' was called on the service provider, but 'UseInternalServiceProvider' wasn't called in the DbContext options configuration. Remove the 'AddEntityFramework*' call as in most cases it's not needed and might cause conflicts with other products and services registered in the same service provider.  
+ERROR [2020-09-16 20:05:18.2145]  Microsoft.EntityFrameworkCore.Database.Connection |41314f64-4da4b44198365ce0. GET https://localhost/_blazor An error occurred using the connection to database 'distributed-task-solving-db' on server 'tcp://distributed-task-solving-db.cpxzgevvsgcx.eu-central-1.rds.amazonaws.com:5432'.  
+ERROR [2020-09-16 20:05:18.2593]  Microsoft.EntityFrameworkCore.Query |41314f64-4da4b44198365ce0. GET https://localhost/_blazor An exception occurred while iterating over the results of a query for context type 'DistributedTaskSolving.EntityFrameworkCore.DbContexts.ApplicationDbContext'.
+System.Net.Sockets.SocketException (11002): This is usually a temporary error during hostname resolution and means that the local server did not receive a response from an authoritative server.
+   at System.Net.Dns.InternalGetHostByName(String hostName)
+   at System.Net.Dns.GetHostAddresses(String hostNameOrAddress)
+   at Npgsql.NpgsqlConnector.Connect(NpgsqlTimeout timeout)
+   at Npgsql.NpgsqlConnector.RawOpen(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlConnector.Open(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.ConnectorPool.AllocateLong(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlConnection.<>c__DisplayClass32_0.<<Open>g__OpenLong|0>d.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at Npgsql.NpgsqlConnection.Open()
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenDbConnection(Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.Open(Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReader(RelationalCommandParameterObject parameterObject)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.Enumerator.InitializeReader(DbContext _, Boolean result)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.Enumerator.MoveNext() System.Net.Sockets.SocketException (11002): This is usually a temporary error during hostname resolution and means that the local server did not receive a response from an authoritative server.
+   at System.Net.Dns.InternalGetHostByName(String hostName)
+   at System.Net.Dns.GetHostAddresses(String hostNameOrAddress)
+   at Npgsql.NpgsqlConnector.Connect(NpgsqlTimeout timeout)
+   at Npgsql.NpgsqlConnector.RawOpen(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlConnector.Open(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.ConnectorPool.AllocateLong(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlConnection.<>c__DisplayClass32_0.<<Open>g__OpenLong|0>d.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at Npgsql.NpgsqlConnection.Open()
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenDbConnection(Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.Open(Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReader(RelationalCommandParameterObject parameterObject)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.Enumerator.InitializeReader(DbContext _, Boolean result)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.Enumerator.MoveNext() 
+INFO [2020-09-16 20:06:24.6230]  Microsoft.Hosting.Lifetime    Now listening on: https://localhost:5001  
+INFO [2020-09-16 20:06:24.6700]  Microsoft.Hosting.Lifetime    Now listening on: http://localhost:5000  
+INFO [2020-09-16 20:06:24.6782]  Microsoft.Hosting.Lifetime    Application started. Press Ctrl+C to shut down.  
+INFO [2020-09-16 20:06:24.6782]  Microsoft.Hosting.Lifetime    Hosting environment: Development  
+INFO [2020-09-16 20:06:24.6888]  Microsoft.Hosting.Lifetime    Content root path: C:\Users\Hubert Mijalski\Documents\distributed-wasm\server\DistributedTaskSolving  
+WARN [2020-09-16 20:06:28.6925]  Microsoft.EntityFrameworkCore.Infrastructure |fe2fdfc3-45f817f3546f576d. GET https://localhost/_blazor 'AddEntityFramework*' was called on the service provider, but 'UseInternalServiceProvider' wasn't called in the DbContext options configuration. Remove the 'AddEntityFramework*' call as in most cases it's not needed and might cause conflicts with other products and services registered in the same service provider.  
