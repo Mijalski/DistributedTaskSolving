@@ -7,6 +7,6 @@ namespace DistributedTaskSolving.Application.Shared.Business.JobSystem.JobInstan
     {
         Task StartWorkOnJobType(string jobTypeName, WorkUnitClientDto workUnitClientDto,
             string algorithmName, string programmingLanguageName);
-        Task FinishWorkUnit(long workUnitId, string data, bool isSolved, string jobTypeName);
+        Task FinishWorkUnit(long workUnitId, string data, bool isSolved, string jobTypeName, double executionTimeInMs);
     }
 }

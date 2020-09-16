@@ -25,5 +25,6 @@ namespace DistributedTaskSolving.Business.BusinessEntities.JobSystem.WorkUnits
         public long? WorkUnitClientId { get; set; }
         public WorkUnitClient WorkUnitClient { get; set; }
         public string ConnectionId { get; set; }
+        public double ExecutionTimeInMs { get; set; }
     }
 }

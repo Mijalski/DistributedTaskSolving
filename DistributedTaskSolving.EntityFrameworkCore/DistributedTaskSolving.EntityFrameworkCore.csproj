@@ -5,6 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200916173738_WorkUnitExecutionTime.cs" />
+    <Compile Remove="Migrations\20200916173738_WorkUnitExecutionTime.Designer.cs" />
+    <Compile Remove="Migrations\20200916173843_WorkUnitExecutionTime.cs" />
+    <Compile Remove="Migrations\20200916173843_WorkUnitExecutionTime.Designer.cs" />
+    <Compile Remove="Migrations\20200916174258_WorkUnitExecutionTime.cs" />
+    <Compile Remove="Migrations\20200916174258_WorkUnitExecutionTime.Designer.cs" />
+    <Compile Remove="Migrations\20200916174327_WorkUnitExecutionTime.cs" />
+    <Compile Remove="Migrations\20200916174327_WorkUnitExecutionTime.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.3">

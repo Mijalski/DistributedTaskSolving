@@ -46,7 +46,7 @@ namespace DistributedTaskSolving.Application.Business.JobSystem.JobInstances.Hub
 
         public virtual async Task FinishWorkUnit(long workUnitId, string dataOut, bool isSolved)
         {
-            await _hubConnection.SendAsync("FinishWorkUnit", workUnitId, dataOut, isSolved);
+            await _hubConnection.SendAsync("FinishWorkUnit", workUnitId, dataOut, isSolved, 0);
         }
 
         public ValueTask DisposeAsync()

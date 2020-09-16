@@ -47,19 +47,19 @@ namespace DistributedTaskSolving.EntityFrameworkCore.DbContexts
                 new JobType
                 {
                     Name = JobTypeEnums.PasswordBruteForcing,
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("d47dd1ab-291f-4979-b9d1-9b2416728911"),
                     CreationDateTime = DateTime.UtcNow
                 },
                 new JobType
                 {
                     Name = JobTypeEnums.MonteCarlo,
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("2bc335a2-90de-46b2-b634-9d815a12c578"),
                     CreationDateTime = DateTime.UtcNow
                 },
                 new JobType
                 {
                     Name = JobTypeEnums.Sequencing,
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("296a7658-936c-4781-a903-ee6455b0f746"),
                     CreationDateTime = DateTime.UtcNow
                 }
             );

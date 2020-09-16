@@ -79,7 +79,7 @@ namespace DistributedTaskSolving.Application.Business.JobSystem.JobInstances.Hub
             }
         }
 
-        public async Task FinishWorkUnit(long workUnitId, string data, bool isSolved, string jobTypeName)
+        public async Task FinishWorkUnit(long workUnitId, string data, bool isSolved, string jobTypeName, double executionTimeInMs)
         {
             try
             {
@@ -89,6 +89,7 @@ namespace DistributedTaskSolving.Application.Business.JobSystem.JobInstances.Hub
 
                 var workUnitFinisher = _workUnitFinisherServiceResolver(jobTypeName);
 
+                workUnit.ExecutionTimeInMs = executionTimeInMs;
                 var isJobInstanceFinished = await workUnitFinisher.FinishWorkUnitAsync(workUnit, data, isSolved);
 
                 if (isJobInstanceFinished)
