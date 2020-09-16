@@ -12,6 +12,8 @@
 @using ChartJs.Blazor.ChartJS.Common.Axes.Ticks
 @using ChartJs.Blazor.Charts
 @using System.Globalization
+@using System.Linq
+@using System.Runtime.InteropServices.ComTypes
 @using ChartJs.Blazor.ChartJS.Common.Handlers
 @inherits GridReadComponent<JobInstanceDto>
 @inject IMediator Mediator
@@ -58,11 +60,11 @@
             <ChartJsPieChart @ref="_userAgentPieChartJs" Config="@_userAgentPieConfig" />
         </div>
     </div>
-    @*<div class="row mt-3">
-            <div class="col-12">
-                <ChartJsBarChart @ref="_ramSizeBarChartJs" Config="@_ramSizeBarConfig" />
-            </div>
-        </div>*@
+    <div class="row mt-3">
+        <div class="col-12">
+            <ChartJsPieChart @ref="_workUnitDetailsPieChartJs" Config="@_workUnitDetailsPieConfig" />
+        </div>
+    </div>
     <div class="row mt-3">
         <div class="col-12">
             <ChartJsBarChart @ref="_workUnitTimeChartJs" Config="@_workUnitTimeConfig" />
@@ -73,7 +75,10 @@
 @code
 {
     List<WorkUnitDto> _workUnits;
+    List<WorkUnitDto> _workUnitsWithExecutionTimes;
     TimeSpan _cpuTime;
+    PieConfig _workUnitDetailsPieConfig;
+    ChartJsPieChart _workUnitDetailsPieChartJs;
     PieConfig _userAgentPieConfig;
     ChartJsPieChart _userAgentPieChartJs;
     BarConfig _ramSizeBarConfig;
@@ -93,11 +98,12 @@
     {
         await LoadWorkUnits();
 
+        LoadMiscData();
+
         LoadUserAgentPieChart();
+        LoadWorkUnitDetailsPieChart();
         //LoadRamSizeBarChart();
         LoadWorkUnitTimeBarChart();
-
-        LoadMiscData();
     }
 
     public void LoadMiscData()
@@ -124,10 +130,8 @@
         _minWorkUnitTime = new TimeSpan(Convert.ToInt64(minWorkUnitTicks));
 
 
-        var workUnitCpuTimes = _workUnits
-            .Where(_ => _.ExecutionTimeInMs > 0)
-            .Select(_ => _.ExecutionTimeInMs)
-            .ToList();
+        var workUnitCpuTimes = _workUnitsWithExecutionTimes
+            .Select(_ => _.ExecutionTimeInMs);
 
         if (workUnitCpuTimes.Any())
         {
@@ -157,6 +161,10 @@
         });
 
         _cpuTime = new TimeSpan(cpuTimes.Sum(r => r.CpuTime.Ticks));
+
+        _workUnitsWithExecutionTimes = _workUnits
+            .Where(_ => _.ExecutionTimeInMs > 0)
+            .ToList();
 
         StateHasChanged();
     }
@@ -200,6 +208,52 @@
         pieSet.Data.AddRange(workUnitGroupedByUserAgent.Select(_ => (double)_.Count()));
 
         _userAgentPieConfig.Data.Datasets.Add(pieSet);
+    }
+
+    public void LoadWorkUnitDetailsPieChart()
+    {
+        _workUnitDetailsPieConfig = new PieConfig
+        {
+            Options = new PieOptions
+            {
+                Title = new OptionsTitle
+                {
+                    Display = true,
+                    Text = "Work Unit Time Details"
+                },
+                Responsive = true,
+                Animation = new ArcAnimation
+                {
+                    AnimateRotate = true,
+                    AnimateScale = true
+                },
+            }
+        };
+
+
+        var pieSet = new PieDataset
+        {
+            BackgroundColor = new[] { ColorUtil.RandomColorString(), ColorUtil.RandomColorString(), ColorUtil.RandomColorString(), ColorUtil.RandomColorString() },
+            BorderWidth = 0,
+            HoverBackgroundColor = ColorUtil.RandomColorString(),
+            HoverBorderColor = ColorUtil.RandomColorString(),
+            HoverBorderWidth = 1,
+            BorderColor = "#ffffff",
+        };
+
+        var labels = new List<string>()
+        {
+            "Execution time", "Time overall"
+        };
+
+        _workUnitDetailsPieConfig.Data.Labels.AddRange(
+            labels
+        );
+
+        pieSet.Data.Add(_workUnitsWithExecutionTimes.Sum(_ => _.ExecutionTimeInMs));
+        pieSet.Data.Add(_workUnitsWithExecutionTimes.Aggregate(0, (res, item) => res + (item.SubmitDateTime - item.CreationDateTime).Value.Milliseconds));
+
+        _workUnitDetailsPieConfig.Data.Datasets.Add(pieSet);
     }
 
     public void LoadRamSizeBarChart()

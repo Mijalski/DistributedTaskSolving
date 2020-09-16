@@ -38,7 +38,8 @@ namespace DistributedTaskSolving.Application.Business.JobSystem.Services
                     _jobInstance = await _jobInstanceRepository.GetAll()
                         .Include(i => i.WorkUnits)
                         .FirstAsync(i => i.Id == id);
-                    _workUnits = new ConcurrentDictionary<string, WorkUnit>(_jobInstance.WorkUnits.ToDictionary(u => u.DataIn, u => u));
+                    _workUnits = new ConcurrentDictionary<string, WorkUnit>(
+                        _jobInstance.WorkUnits.Where(u => !u.IsAbandoned).GroupBy(u => u.DataIn).Select(g => g.OrderByDescending(d => d.CreationDateTime).First()).ToDictionary(u => u.DataIn, u => u));
 
                     return _jobInstance;
                 }
